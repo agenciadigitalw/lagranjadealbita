@@ -9,9 +9,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600;1,700&family=Jost:wght@300;400;500;600;700&family=Fredoka+One&display=swap" rel="stylesheet" />
   <style>
-    /* ===========================
-       DESIGN TOKENS
-    =========================== */
     :root {
       --cafe:        #3D2B1F;
       --cafe-light:  #5C4033;
@@ -24,2154 +21,865 @@
       --crema-dark:  #EBE3D0;
       --negro:       #1C1C1C;
       --blanco:      #FDFAF5;
-
       --font-serif:  'Cormorant Garamond', Georgia, serif;
       --font-sans:   'Jost', system-ui, sans-serif;
       --font-fun:    'Fredoka One', cursive;
-
       --radius-sm:   8px;
       --radius-md:   16px;
       --radius-lg:   32px;
-      --radius-xl:   64px;
-
-      --shadow-card: 0 8px 40px rgba(61,43,31,0.12);
-      --shadow-hover:0 20px 60px rgba(61,43,31,0.22);
-      --shadow-glow: 0 0 40px rgba(201,148,10,0.35);
+      --shadow-card: 0 4px 24px rgba(61,43,31,0.10);
+      --shadow-hover:0 16px 48px rgba(61,43,31,0.20);
     }
-
-    /* ===========================
-       RESET & BASE
-    =========================== */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; font-size: 16px; }
-    body {
-      font-family: var(--font-sans);
-      background: var(--crema);
-      color: var(--cafe);
-      overflow-x: hidden;
-      cursor: none;
-    }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--font-sans); background: var(--crema); color: var(--negro); overflow-x: hidden; cursor: none; }
     ::selection { background: var(--dorado); color: var(--cafe); }
     img { display: block; max-width: 100%; }
     a { text-decoration: none; color: inherit; }
-
-    /* Scrollbar */
-    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar { width: 5px; }
     ::-webkit-scrollbar-track { background: var(--crema-dark); }
     ::-webkit-scrollbar-thumb { background: var(--dorado); border-radius: 3px; }
 
-    /* ===========================
-       CUSTOM CURSOR
-    =========================== */
-    .cursor {
-      width: 12px; height: 12px;
-      background: var(--dorado);
-      border-radius: 50%;
-      position: fixed; top: 0; left: 0;
-      pointer-events: none;
-      z-index: 9999;
-      transform: translate(-50%,-50%);
-      transition: transform 0.1s, width 0.3s, height 0.3s, background 0.3s;
-      mix-blend-mode: multiply;
-    }
-    .cursor-ring {
-      width: 40px; height: 40px;
-      border: 1.5px solid var(--dorado);
-      border-radius: 50%;
-      position: fixed; top: 0; left: 0;
-      pointer-events: none;
-      z-index: 9998;
-      transform: translate(-50%,-50%);
-      transition: transform 0.15s ease, width 0.3s, height 0.3s, opacity 0.3s;
-      opacity: 0.6;
-    }
-    body:hover .cursor { opacity: 1; }
-    .cursor.hovered { width: 6px; height: 6px; background: var(--cafe); }
-    .cursor-ring.hovered { width: 60px; height: 60px; opacity: 1; border-color: var(--cafe); }
+    /* CURSOR */
+    .cursor { width: 10px; height: 10px; background: var(--dorado); border-radius: 50%; position: fixed; top:0; left:0; pointer-events:none; z-index:9999; transform:translate(-50%,-50%); transition: width .25s, height .25s, background .25s; }
+    .cursor-ring { width: 36px; height: 36px; border: 1.5px solid var(--dorado); border-radius: 50%; position:fixed; top:0; left:0; pointer-events:none; z-index:9998; transform:translate(-50%,-50%); opacity:.5; transition: width .3s, height .3s, border-color .3s; }
+    .cursor.hov { width:5px; height:5px; background: var(--cafe); }
+    .cursor-ring.hov { width:52px; height:52px; opacity:.9; border-color: var(--cafe); }
 
-    /* ===========================
-       NOISE TEXTURE OVERLAY
-    =========================== */
-    body::before {
-      content: '';
-      position: fixed; inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-      pointer-events: none;
-      z-index: 9990;
-      opacity: 0.3;
-    }
+    /* SCROLL REVEAL */
+    .sr { opacity:0; transform:translateY(36px); transition: opacity .75s ease, transform .75s ease; }
+    .sr.on { opacity:1; transform:translateY(0); }
+    .sr-l { opacity:0; transform:translateX(-36px); transition: opacity .75s ease, transform .75s ease; }
+    .sr-l.on { opacity:1; transform:translateX(0); }
+    .sr-r { opacity:0; transform:translateX(36px); transition: opacity .75s ease, transform .75s ease; }
+    .sr-r.on { opacity:1; transform:translateX(0); }
+    .sr-scale { opacity:0; transform:scale(.92); transition: opacity .75s ease, transform .75s cubic-bezier(.34,1.56,.64,1); }
+    .sr-scale.on { opacity:1; transform:scale(1); }
+    .d1 { transition-delay: .08s; } .d2 { transition-delay: .16s; } .d3 { transition-delay: .24s; }
+    .d4 { transition-delay: .32s; } .d5 { transition-delay: .40s; } .d6 { transition-delay: .48s; }
 
-    /* ===========================
-       UTILITY CLASSES
-    =========================== */
-    .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
-    .section-label {
-      font-family: var(--font-sans);
-      font-size: 0.7rem;
-      font-weight: 600;
-      letter-spacing: 0.3em;
-      text-transform: uppercase;
-      color: var(--oliva);
-      display: inline-block;
-      margin-bottom: 1rem;
+    /* UTILS */
+    .container { max-width: 1160px; margin: 0 auto; padding: 0 2rem; }
+    .badge {
+      display: inline-flex; align-items: center; gap: .35rem;
+      font-size: .68rem; font-weight: 700; letter-spacing: .18em; text-transform: uppercase;
+      padding: .28rem .8rem; border-radius: 100px;
     }
-    .section-label::before {
-      content: '——  ';
-      color: var(--dorado);
+    .badge--olive { background: rgba(92,107,46,.12); color: var(--oliva); }
+    .badge--gold  { background: rgba(201,148,10,.12); color: var(--dorado); }
+    .eyebrow {
+      font-size: .72rem; font-weight: 600; letter-spacing: .32em; text-transform: uppercase;
+      color: var(--oliva); display: flex; align-items: center; gap: .6rem; justify-content: center;
     }
+    .eyebrow::before { content:''; width:28px; height:1.5px; background: var(--dorado); }
+    .eyebrow::after  { content:''; width:28px; height:1.5px; background: var(--dorado); }
     .section-title {
       font-family: var(--font-serif);
-      font-size: clamp(2.4rem, 5vw, 4rem);
-      font-weight: 600;
-      line-height: 1.1;
-      color: var(--cafe);
-      letter-spacing: -0.01em;
+      font-size: clamp(2.2rem, 4.5vw, 3.8rem);
+      font-weight: 600; line-height: 1.1; letter-spacing: -.02em;
     }
-    .section-title em {
-      font-style: italic;
-      color: var(--dorado);
-    }
+    .section-title em { font-style: italic; color: var(--dorado); }
+    .section-title--light { color: var(--crema); }
+    .section-body { font-size: .93rem; line-height: 1.75; color: rgba(28,28,28,.68); max-width: 560px; }
+    .section-header { text-align:center; margin-bottom: 4rem; display:flex; flex-direction:column; gap:1rem; align-items:center; }
 
-    .reveal { opacity: 0; transform: translateY(40px); }
-    .reveal.visible { opacity: 1; transform: translateY(0); transition: opacity 0.8s ease, transform 0.8s ease; }
-
-    /* ===========================
-       BUTTONS
-    =========================== */
+    /* BUTTONS */
     .btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.6rem;
-      padding: 0.9rem 2rem;
-      border-radius: 100px;
-      font-family: var(--font-sans);
-      font-size: 0.9rem;
-      font-weight: 600;
-      letter-spacing: 0.04em;
-      cursor: none;
-      transition: transform 0.3s, box-shadow 0.3s, background 0.3s;
-      position: relative;
-      overflow: hidden;
+      display: inline-flex; align-items: center; gap: .55rem;
+      padding: .9rem 2rem; border-radius: 100px;
+      font-family: var(--font-sans); font-size: .88rem; font-weight: 600; letter-spacing: .04em;
+      cursor: none; transition: transform .3s, box-shadow .3s; position:relative; overflow:hidden;
     }
-    .btn::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: rgba(255,255,255,0.15);
-      opacity: 0;
-      transition: opacity 0.3s;
-    }
-    .btn:hover::after { opacity: 1; }
+    .btn::after { content:''; position:absolute; inset:0; background:rgba(255,255,255,.14); opacity:0; transition: opacity .3s; }
+    .btn:hover::after { opacity:1; }
     .btn:hover { transform: translateY(-3px); }
+    .btn--gold { background: var(--dorado); color: var(--cafe); box-shadow: 0 4px 20px rgba(201,148,10,.38); }
+    .btn--gold:hover { box-shadow: 0 8px 32px rgba(201,148,10,.55); }
+    .btn--outline { background:transparent; color:var(--crema); border:1.5px solid rgba(245,240,232,.4); }
+    .btn--outline:hover { border-color: var(--crema); }
+    .btn--wa { background:#25D366; color:#fff; box-shadow:0 6px 24px rgba(37,211,102,.38); }
+    .btn--wa:hover { background:#1eb857; box-shadow:0 10px 36px rgba(37,211,102,.5); transform:translateY(-4px); }
+    .btn--lg { padding: 1.1rem 2.6rem; font-size: 1rem; }
+    .btn--wa::before { content:''; position:absolute; inset:-5px; border:2px solid rgba(37,211,102,.35); border-radius:100px; animation: wapulse 2.2s ease-out infinite; }
+    @keyframes wapulse { 0%{transform:scale(1);opacity:.7} 100%{transform:scale(1.14);opacity:0} }
 
-    .btn--primary {
-      background: var(--dorado);
-      color: var(--cafe);
-      box-shadow: 0 4px 20px rgba(201,148,10,0.4);
-    }
-    .btn--primary:hover { box-shadow: var(--shadow-glow); }
-
-    .btn--ghost {
-      background: transparent;
-      color: var(--cafe);
-      border: 1.5px solid rgba(61,43,31,0.3);
-    }
-    .btn--ghost:hover { border-color: var(--cafe); }
-
-    .btn--whatsapp {
-      background: #25D366;
-      color: #fff;
-      font-size: 1.1rem;
-      padding: 1.1rem 2.6rem;
-      box-shadow: 0 8px 30px rgba(37,211,102,0.4);
-    }
-    .btn--whatsapp:hover {
-      background: #20ba58;
-      box-shadow: 0 12px 40px rgba(37,211,102,0.55);
-      transform: translateY(-4px);
-    }
-    .btn--xl { padding: 1.3rem 3rem; font-size: 1.15rem; }
-
-    /* ===========================
-       NAVBAR
-    =========================== */
-    .nav {
-      position: fixed; top: 0; left: 0; right: 0;
-      z-index: 1000;
-      padding: 1.2rem 2rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      transition: background 0.4s, backdrop-filter 0.4s, padding 0.4s, box-shadow 0.4s;
-    }
-    .nav.scrolled {
-      background: rgba(245,240,232,0.88);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      padding: 0.8rem 2rem;
-      box-shadow: 0 2px 30px rgba(61,43,31,0.08);
-    }
-    .nav__logo {
-      font-family: var(--font-serif);
-      font-size: 1.4rem;
-      font-weight: 600;
-      color: var(--crema);
-      letter-spacing: -0.02em;
-      line-height: 1;
-      transition: color 0.4s;
-    }
-    .nav__logo span { color: var(--dorado); font-style: italic; }
+    /* NAV */
+    .nav { position:fixed; top:0; left:0; right:0; z-index:1000; padding:1.2rem 2rem; display:flex; align-items:center; justify-content:space-between; transition: background .4s, padding .4s, box-shadow .4s; }
+    .nav.scrolled { background:rgba(245,240,232,.9); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); padding:.75rem 2rem; box-shadow:0 2px 24px rgba(61,43,31,.08); }
+    .nav__logo { font-family:var(--font-serif); font-size:1.35rem; font-weight:600; color:var(--crema); letter-spacing:-.02em; transition: color .4s; }
+    .nav__logo em { color:var(--dorado); font-style:italic; }
     .nav.scrolled .nav__logo { color: var(--cafe); }
-    .nav.scrolled .nav__logo span { color: var(--dorado); }
-    .nav__links {
-      display: flex;
-      gap: 2.2rem;
-      align-items: center;
-    }
-    .nav__links a {
-      font-size: 0.82rem;
-      font-weight: 500;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: rgba(245,240,232,0.85);
-      position: relative;
-      transition: color 0.3s;
-    }
+    .nav__links { display:flex; gap:2rem; }
+    .nav__links a { font-size:.8rem; font-weight:500; letter-spacing:.09em; text-transform:uppercase; color:rgba(245,240,232,.85); transition: color .3s; position:relative; }
+    .nav__links a::after { content:''; position:absolute; bottom:-3px; left:0; right:0; height:1.5px; background:var(--dorado); transform:scaleX(0); transform-origin:right; transition: transform .3s; }
+    .nav__links a:hover { color:var(--dorado); }
+    .nav__links a:hover::after { transform:scaleX(1); transform-origin:left; }
     .nav.scrolled .nav__links a { color: var(--cafe); }
-    .nav__links a::after {
-      content: '';
-      position: absolute;
-      bottom: -3px; left: 0; right: 0;
-      height: 1.5px;
-      background: var(--dorado);
-      transform: scaleX(0);
-      transform-origin: right;
-      transition: transform 0.3s;
-    }
-    .nav__links a:hover { color: var(--dorado); }
-    .nav__links a:hover::after { transform: scaleX(1); transform-origin: left; }
-    .nav__cta { margin-left: 1rem; }
-    .nav__hamburger {
-      display: none;
-      background: none;
-      border: none;
-      cursor: none;
-      flex-direction: column;
-      gap: 5px;
-      padding: 4px;
-    }
-    .nav__hamburger span {
-      display: block;
-      width: 24px; height: 2px;
-      background: var(--crema);
-      border-radius: 2px;
-      transition: transform 0.3s, opacity 0.3s, background 0.4s;
-    }
-    .nav.scrolled .nav__hamburger span { background: var(--cafe); }
-    .nav__hamburger.open span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
-    .nav__hamburger.open span:nth-child(2) { opacity: 0; }
-    .nav__hamburger.open span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+    .nav__ham { display:none; background:none; border:none; cursor:none; flex-direction:column; gap:5px; padding:4px; }
+    .nav__ham span { display:block; width:24px; height:2px; background:var(--crema); border-radius:2px; transition: transform .3s, opacity .3s, background .4s; }
+    .nav.scrolled .nav__ham span { background: var(--cafe); }
+    .nav__ham.open span:nth-child(1) { transform:rotate(45deg) translate(5px,5px); }
+    .nav__ham.open span:nth-child(2) { opacity:0; }
+    .nav__ham.open span:nth-child(3) { transform:rotate(-45deg) translate(5px,-5px); }
+    .mob-menu { position:fixed; inset:0; background:var(--cafe); z-index:999; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2rem; transform:translateX(100%); transition:transform .5s cubic-bezier(.76,0,.24,1); }
+    .mob-menu.open { transform:translateX(0); }
+    .mob-menu a { font-family:var(--font-serif); font-size:2.4rem; color:var(--crema); font-weight:300; transition:color .3s; }
+    .mob-menu a:hover { color:var(--dorado); }
 
-    /* Mobile menu */
-    .mobile-menu {
-      position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-      background: var(--cafe);
-      z-index: 999;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 2rem;
-      transform: translateX(100%);
-      transition: transform 0.5s cubic-bezier(0.76, 0, 0.24, 1);
-    }
-    .mobile-menu.open { transform: translateX(0); }
-    .mobile-menu a {
-      font-family: var(--font-serif);
-      font-size: 2.5rem;
-      color: var(--crema);
-      font-weight: 300;
-      letter-spacing: -0.02em;
-      transition: color 0.3s;
-    }
-    .mobile-menu a:hover { color: var(--dorado); }
+    /* ── HERO ── */
+    .hero { position:relative; min-height:100vh; display:flex; align-items:center; background:var(--cafe); overflow:hidden; }
+    #heroCanvas { position:absolute; inset:0; width:100%; height:100%; }
+    .hero__overlay { position:absolute; inset:0; background: radial-gradient(ellipse 70% 60% at 55% 50%, rgba(201,148,10,.07) 0%, transparent 70%); }
+    .hero__content { position:relative; z-index:2; max-width:820px; margin:0 auto; padding:120px 2rem 80px; text-align:center; }
+    .hero__tag { font-size:.68rem; font-weight:600; letter-spacing:.3em; text-transform:uppercase; color:var(--dorado); margin-bottom:1.4rem; opacity:0; }
+    .hero__h1 { font-family:var(--font-serif); font-size:clamp(3rem,7vw,6.5rem); font-weight:700; line-height:1.0; color:var(--crema); letter-spacing:-.02em; margin-bottom:1.6rem; text-shadow:0 4px 40px rgba(0,0,0,.5); }
+    .hero__h1 .ln { display:block; overflow:hidden; }
+    .hero__h1 .ln-in { display:block; transform:translateY(110%); }
+    .hero__h1 em { font-style:italic; color:var(--dorado-pale); font-weight:300; }
+    .hero__sub { font-size:.95rem; font-weight:300; color:rgba(245,240,232,.7); letter-spacing:.06em; margin-bottom:2.4rem; opacity:0; }
+    .hero__btns { display:flex; gap:.9rem; justify-content:center; flex-wrap:wrap; margin-bottom:2.5rem; opacity:0; }
+    .hero__price { display:inline-flex; align-items:baseline; gap:.4rem; background:rgba(245,240,232,.07); border:1px solid rgba(201,148,10,.3); border-radius:100px; padding:.55rem 1.4rem; opacity:0; }
+    .hero__price span:nth-child(1) { font-size:.7rem; letter-spacing:.12em; text-transform:uppercase; color:rgba(245,240,232,.5); }
+    .hero__price span:nth-child(2) { font-family:var(--font-serif); font-size:1.55rem; font-weight:600; color:var(--dorado-pale); }
+    .hero__price span:nth-child(3) { font-size:.7rem; color:rgba(245,240,232,.45); }
+    .hero__scroll-ind { position:absolute; bottom:2rem; left:50%; transform:translateX(-50%); display:flex; flex-direction:column; align-items:center; gap:.5rem; z-index:2; opacity:0; }
+    .hero__scroll-ind span { font-size:.62rem; letter-spacing:.25em; text-transform:uppercase; color:rgba(245,240,232,.35); }
+    .hero__scroll-line { width:1px; height:48px; background:linear-gradient(to bottom,rgba(201,148,10,.8),transparent); animation:scrlln 2s ease-in-out infinite; }
+    @keyframes scrlln { 0%{transform:scaleY(0);transform-origin:top} 50%{transform:scaleY(1);transform-origin:top} 51%{transform:scaleY(1);transform-origin:bottom} 100%{transform:scaleY(0);transform-origin:bottom} }
+    .hero__badge { position:absolute; right:6%; top:36%; width:120px; height:120px; z-index:3; animation:spin 18s linear infinite; }
+    .hero__badge svg { width:100%; height:100%; }
+    .hero__badge-center { position:absolute; inset:30%; background:var(--dorado); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.3rem; }
+    @keyframes spin { to{transform:rotate(360deg)} }
 
-    /* ===========================
-       HERO
-    =========================== */
-    .hero {
-      position: relative;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      overflow: hidden;
-      background: var(--cafe);
-    }
-    #heroCanvas {
-      position: absolute;
-      inset: 0;
-      width: 100%; height: 100%;
-    }
-    .hero__bg-gradient {
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(ellipse 80% 60% at 60% 50%, rgba(201,148,10,0.08) 0%, transparent 70%),
-                  radial-gradient(ellipse 40% 80% at 20% 80%, rgba(92,107,46,0.12) 0%, transparent 60%);
-    }
-    .hero__content {
-      position: relative;
-      z-index: 2;
-      max-width: 800px;
-      padding: 0 2rem;
-      margin: 0 auto;
-      text-align: center;
-      padding-top: 100px;
-    }
-    .hero__eyebrow {
-      font-family: var(--font-sans);
-      font-size: 0.72rem;
-      font-weight: 500;
-      letter-spacing: 0.35em;
-      text-transform: uppercase;
-      color: var(--dorado);
-      margin-bottom: 1.6rem;
-      opacity: 0;
-    }
-    .hero__headline {
-      font-family: var(--font-serif);
-      font-size: clamp(3.2rem, 7vw, 6.5rem);
-      font-weight: 700;
-      line-height: 1.0;
-      color: var(--crema);
-      letter-spacing: -0.02em;
-      margin-bottom: 1.8rem;
-      text-shadow: 0 2px 30px rgba(0,0,0,0.4);
-    }
-    .hero__headline .line { display: block; overflow: hidden; }
-    .hero__headline .line-inner {
-      display: block;
-      transform: translateY(110%);
-    }
-    .hero__headline em {
-      font-style: italic;
-      color: var(--dorado-pale);
-      font-weight: 300;
-    }
-    .hero__subtitle {
-      font-family: var(--font-sans);
-      font-size: 1rem;
-      font-weight: 300;
-      color: rgba(245,240,232,0.65);
-      letter-spacing: 0.08em;
-      margin-bottom: 2.8rem;
-      opacity: 0;
-    }
-    .hero__cta-group {
-      display: flex;
-      gap: 1rem;
-      justify-content: center;
-      flex-wrap: wrap;
-      margin-bottom: 3rem;
-      opacity: 0;
-    }
-    .hero__cta-group .btn--ghost { color: var(--crema); border-color: rgba(245,240,232,0.4); }
-    .hero__cta-group .btn--ghost:hover { border-color: var(--crema); color: var(--crema); }
+    /* ── MARQUEE ── */
+    .mq-band { background:var(--dorado); padding:.7rem 0; overflow:hidden; white-space:nowrap; }
+    .mq-track { display:inline-flex; animation:mq 22s linear infinite; }
+    .mq-item { font-family:var(--font-serif); font-size:1.05rem; font-style:italic; color:var(--cafe); padding:0 1.8rem; }
+    .mq-item::after { content:'✦'; margin-left:1.8rem; font-style:normal; font-size:.6rem; vertical-align:middle; }
+    @keyframes mq { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
 
-    .hero__price-badge {
-      display: inline-flex;
-      align-items: baseline;
-      gap: 0.4rem;
-      background: rgba(245,240,232,0.07);
-      border: 1px solid rgba(201,148,10,0.3);
-      border-radius: 100px;
-      padding: 0.6rem 1.4rem;
-      opacity: 0;
-    }
-    .price-badge__label {
-      font-size: 0.75rem;
-      color: rgba(245,240,232,0.5);
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-    }
-    .price-badge__price {
-      font-family: var(--font-serif);
-      font-size: 1.6rem;
-      font-weight: 600;
-      color: var(--dorado-pale);
-    }
-    .price-badge__currency {
-      font-size: 0.75rem;
-      color: rgba(245,240,232,0.5);
-    }
+    /* ── MANIFESTO ── */
+    .manifesto { background:var(--cafe); padding:8rem 2rem; text-align:center; position:relative; overflow:hidden; }
+    .manifesto::before { content:'"'; position:absolute; top:-3rem; left:50%; transform:translateX(-50%); font-family:var(--font-serif); font-size:24rem; color:rgba(201,148,10,.04); line-height:1; pointer-events:none; }
+    .manifesto__quote { font-family:var(--font-serif); font-size:clamp(1.7rem,3.8vw,3rem); font-weight:300; line-height:1.5; color:var(--crema); max-width:840px; margin:2rem auto 0; }
+    .manifesto__quote .ql { display:block; margin-bottom:.3rem; }
+    .manifesto__quote em { color:var(--dorado-pale); font-weight:500; }
+    .manifesto__attr { margin-top:2.5rem; font-size:.8rem; color:rgba(245,240,232,.45); letter-spacing:.12em; }
 
-    .hero__scroll {
-      position: absolute;
-      bottom: 2.5rem; left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.6rem;
-      z-index: 2;
-      opacity: 0;
-    }
-    .hero__scroll span {
-      font-size: 0.65rem;
-      letter-spacing: 0.25em;
-      text-transform: uppercase;
-      color: rgba(245,240,232,0.4);
-    }
-    .hero__scroll-line {
-      width: 1px; height: 50px;
-      background: linear-gradient(to bottom, rgba(201,148,10,0.8), transparent);
-      animation: scrollLine 2s ease-in-out infinite;
-    }
-    @keyframes scrollLine {
-      0% { transform: scaleY(0); transform-origin: top; }
-      50% { transform: scaleY(1); transform-origin: top; }
-      51% { transform: scaleY(1); transform-origin: bottom; }
-      100% { transform: scaleY(0); transform-origin: bottom; }
-    }
+    /* WORD REVEAL */
+    .wr { overflow:hidden; display:inline-block; vertical-align:bottom; margin-right:.25em; }
+    .wr-in { display:inline-block; transform:translateY(105%); transition:transform .75s cubic-bezier(.22,1,.36,1); }
+    .wline.on .wr-in { transform:translateY(0); }
+    .wline .wr:nth-child(2)  .wr-in { transition-delay:.07s }
+    .wline .wr:nth-child(3)  .wr-in { transition-delay:.14s }
+    .wline .wr:nth-child(4)  .wr-in { transition-delay:.21s }
+    .wline .wr:nth-child(5)  .wr-in { transition-delay:.28s }
+    .wline .wr:nth-child(6)  .wr-in { transition-delay:.35s }
+    .wline .wr:nth-child(7)  .wr-in { transition-delay:.42s }
+    .wline .wr:nth-child(8)  .wr-in { transition-delay:.49s }
 
-    /* Spinning badge */
-    .hero__spin-badge {
-      position: absolute;
-      right: 6%; top: 38%;
-      width: 130px; height: 130px;
-      z-index: 3;
-      animation: spin 18s linear infinite;
-    }
-    .hero__spin-badge svg { width: 100%; height: 100%; }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    .hero__spin-center {
-      position: absolute;
-      inset: 30%;
-      background: var(--dorado);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.4rem;
-    }
+    /* ── KIT ── */
+    .kit { padding:7rem 2rem; background:var(--blanco); }
+    .kit__grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1.4rem; max-width:1100px; margin:0 auto; }
+    .kit-card { background:#fff; border:1.5px solid rgba(61,43,31,.07); border-radius:var(--radius-md); overflow:hidden; box-shadow:var(--shadow-card); transition:transform .4s cubic-bezier(.22,1,.36,1), box-shadow .4s; cursor:none; }
+    .kit-card:hover { transform:translateY(-7px); box-shadow:var(--shadow-hover); }
+    /* card top art */
+    .kit-card__art { height:120px; display:flex; align-items:center; justify-content:center; position:relative; overflow:hidden; }
+    .kit-card__art-icon { font-size:3.2rem; position:relative; z-index:1; filter:drop-shadow(0 4px 12px rgba(0,0,0,.15)); }
+    .kit-card__art::after { content:''; position:absolute; inset:0; background:linear-gradient(to bottom,transparent 40%,rgba(0,0,0,.15)); }
+    /* individual card colors */
+    .kit-card:nth-child(1) .kit-card__art { background:linear-gradient(135deg,#a0522d,#6b3520); }
+    .kit-card:nth-child(2) .kit-card__art { background:linear-gradient(135deg,#c9940a,#8a6500); }
+    .kit-card:nth-child(3) .kit-card__art { background:linear-gradient(135deg,#5c6b2e,#3a4220); }
+    .kit-card:nth-child(4) .kit-card__art { background:linear-gradient(135deg,#8b7355,#5c4a30); }
+    .kit-card:nth-child(5) .kit-card__art { background:linear-gradient(135deg,#4a7c59,#2d5038); }
+    .kit-card:nth-child(6) .kit-card__art { background:linear-gradient(135deg,#7a5c8a,#4d3a5c); }
+    .kit-card:nth-child(7) .kit-card__art { background:linear-gradient(135deg,#3d6b8a,#22445c); }
+    .kit-card__body { padding:1.4rem 1.6rem 1.6rem; }
+    .kit-card__title { font-family:var(--font-serif); font-size:1.15rem; font-weight:600; color:var(--cafe); margin-bottom:.4rem; }
+    .kit-card__desc { font-size:.83rem; color:rgba(28,28,28,.65); line-height:1.65; }
+    .kit-card__tag { display:inline-block; margin-top:.9rem; font-size:.66rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--dorado); background:rgba(201,148,10,.1); padding:.22rem .7rem; border-radius:100px; }
+    /* featured card */
+    .kit-card--feat { grid-column:span 3; display:grid; grid-template-columns:280px 1fr; }
+    .kit-card--feat .kit-card__art { height:100%; min-height:160px; background:linear-gradient(135deg,#3d2b1f,#1c1008); }
+    .kit-card--feat .kit-card__art-icon { font-size:5rem; }
+    .kit-card--feat .kit-card__body { display:flex; flex-direction:column; justify-content:center; background:var(--cafe); }
+    .kit-card--feat .kit-card__title { color:var(--crema); font-size:1.5rem; }
+    .kit-card--feat .kit-card__desc { color:rgba(245,240,232,.75); font-size:.9rem; }
+    .kit-card--feat .kit-card__tag { background:rgba(201,148,10,.2); }
 
-    /* ===========================
-       MARQUEE BAND
-    =========================== */
-    .marquee-band {
-      background: var(--dorado);
-      padding: 0.75rem 0;
-      overflow: hidden;
-      white-space: nowrap;
-    }
-    .marquee-track {
-      display: inline-flex;
-      gap: 0;
-      animation: marquee 25s linear infinite;
-    }
-    .marquee-item {
-      font-family: var(--font-serif);
-      font-size: 1.1rem;
-      font-style: italic;
-      color: var(--cafe);
-      padding: 0 2rem;
-      font-weight: 400;
-    }
-    .marquee-item::after {
-      content: '✦';
-      margin-left: 2rem;
-      font-style: normal;
-      font-size: 0.7rem;
-      vertical-align: middle;
-    }
-    @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+    /* ── 21 DÍAS ── */
+    .journey { padding:7rem 2rem; background:var(--cafe); overflow:hidden; }
+    .journey .eyebrow { color:var(--dorado); }
+    .journey .eyebrow::before,.journey .eyebrow::after { background:rgba(201,148,10,.4); }
+    .journey__grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1.6rem; max-width:1100px; margin:0 auto; }
+    .wk { background:rgba(245,240,232,.09); border:1.5px solid rgba(201,148,10,.25); border-radius:var(--radius-md); overflow:hidden; transition:background .35s, border-color .35s, transform .35s; cursor:none; }
+    .wk:hover { background:rgba(245,240,232,.14); border-color:rgba(201,148,10,.5); transform:translateY(-6px); }
+    .wk__head { padding:1.8rem 1.8rem 0; display:flex; align-items:center; gap:1rem; }
+    .wk__num { font-family:var(--font-fun); font-size:3rem; color:var(--dorado); line-height:1; flex-shrink:0; }
+    .wk__meta { }
+    .wk__label { font-size:.65rem; letter-spacing:.2em; text-transform:uppercase; color:rgba(245,240,232,.65); }
+    .wk__title { font-family:var(--font-serif); font-size:1.2rem; color:var(--crema); font-weight:600; margin-top:.15rem; }
+    .wk__emoji { font-size:2.8rem; padding:1rem 1.8rem .5rem; display:block; }
+    .wk__body { padding:.5rem 1.8rem 1.8rem; }
+    .wk__desc { font-size:.85rem; color:rgba(245,240,232,.82); line-height:1.7; margin-bottom:1.2rem; }
+    .wk__steps { display:flex; flex-direction:column; gap:.5rem; }
+    .wk__step { font-size:.81rem; color:rgba(245,240,232,.75); display:flex; gap:.5rem; align-items:flex-start; }
+    .wk__step::before { content:'→'; color:var(--dorado); flex-shrink:0; font-size:.85rem; margin-top:.05em; }
 
-    /* ===========================
-       MANIFESTO
-    =========================== */
-    .manifesto {
-      background: var(--cafe);
-      padding: 8rem 2rem;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-    }
-    .manifesto::before {
-      content: '"';
-      position: absolute;
-      top: -2rem; left: 50%;
-      transform: translateX(-50%);
-      font-family: var(--font-serif);
-      font-size: 25rem;
-      color: rgba(201,148,10,0.04);
-      line-height: 1;
-      pointer-events: none;
-      user-select: none;
-    }
-    .manifesto__eyebrow {
-      font-size: 0.7rem;
-      letter-spacing: 0.35em;
-      text-transform: uppercase;
-      color: var(--dorado);
-      margin-bottom: 2.5rem;
-    }
-    .manifesto__eyebrow::before { content: '——  '; }
-    .manifesto blockquote {
-      font-family: var(--font-serif);
-      font-size: clamp(1.8rem, 4vw, 3.2rem);
-      font-weight: 300;
-      line-height: 1.4;
-      color: var(--crema);
-      max-width: 860px;
-      margin: 0 auto;
-      letter-spacing: -0.01em;
-    }
-    .manifesto blockquote em {
-      color: var(--dorado-pale);
-      font-weight: 500;
-    }
-    .manifesto__sub {
-      margin-top: 3rem;
-      font-size: 0.85rem;
-      color: rgba(245,240,232,0.4);
-      letter-spacing: 0.1em;
-    }
+    /* Timeline connector */
+    .journey__connector { display:flex; align-items:center; justify-content:center; gap:0; max-width:1100px; margin:0 auto 2rem; }
+    .jc-node { width:14px; height:14px; border-radius:50%; background:var(--dorado); flex-shrink:0; }
+    .jc-line { flex:1; height:2px; background:linear-gradient(to right,var(--dorado),rgba(201,148,10,.3)); }
 
-    /* Animated words */
-    .word-reveal .word {
-      display: inline-block;
-      overflow: hidden;
-      vertical-align: bottom;
-      margin-right: 0.25em;
-    }
-    .word-reveal .word-inner {
-      display: inline-block;
-      transform: translateY(105%);
-      transition: transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
-    }
-    .word-reveal.visible .word-inner { transform: translateY(0); }
-    .word-reveal .word:nth-child(2)  .word-inner { transition-delay: 0.07s; }
-    .word-reveal .word:nth-child(3)  .word-inner { transition-delay: 0.14s; }
-    .word-reveal .word:nth-child(4)  .word-inner { transition-delay: 0.21s; }
-    .word-reveal .word:nth-child(5)  .word-inner { transition-delay: 0.28s; }
-    .word-reveal .word:nth-child(6)  .word-inner { transition-delay: 0.35s; }
-    .word-reveal .word:nth-child(7)  .word-inner { transition-delay: 0.42s; }
-    .word-reveal .word:nth-child(8)  .word-inner { transition-delay: 0.49s; }
-    .word-reveal .word:nth-child(9)  .word-inner { transition-delay: 0.56s; }
-    .word-reveal .word:nth-child(10) .word-inner { transition-delay: 0.63s; }
-    .word-reveal .word:nth-child(11) .word-inner { transition-delay: 0.70s; }
-    .word-reveal .word:nth-child(12) .word-inner { transition-delay: 0.77s; }
-    .word-reveal .word:nth-child(13) .word-inner { transition-delay: 0.84s; }
-    .word-reveal .word:nth-child(14) .word-inner { transition-delay: 0.91s; }
-    .word-reveal .word:nth-child(15) .word-inner { transition-delay: 0.98s; }
-    .word-reveal .word:nth-child(16) .word-inner { transition-delay: 1.05s; }
-    .word-reveal .word:nth-child(17) .word-inner { transition-delay: 1.12s; }
-    .word-reveal .word:nth-child(18) .word-inner { transition-delay: 1.19s; }
+    /* ── AUDIENCIA ── */
+    .audience { padding:7rem 2rem; background:var(--crema-dark); }
+    .audience__grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1.6rem; max-width:1040px; margin:0 auto; }
+    .aud-card { background:#fff; border-radius:var(--radius-lg); padding:2.6rem 2rem; text-align:center; box-shadow:var(--shadow-card); transition:transform .4s, box-shadow .4s; cursor:none; border:2px solid transparent; }
+    .aud-card:hover { transform:translateY(-8px); box-shadow:var(--shadow-hover); border-color:rgba(201,148,10,.25); }
+    .aud-card__art { width:80px; height:80px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:2.4rem; margin:0 auto 1.4rem; }
+    .aud-card:nth-child(1) .aud-card__art { background:linear-gradient(135deg,#f0e8c8,#d4c090); }
+    .aud-card:nth-child(2) .aud-card__art { background:linear-gradient(135deg,#c8d4e8,#90a8c8); }
+    .aud-card:nth-child(3) .aud-card__art { background:linear-gradient(135deg,#c8e8c8,#90c890); }
+    .aud-card__title { font-family:var(--font-serif); font-size:1.35rem; font-weight:600; color:var(--cafe); margin-bottom:.7rem; }
+    .aud-card__desc { font-size:.85rem; color:rgba(28,28,28,.68); line-height:1.72; }
+    .aud-card__tag { display:inline-block; margin-top:1.2rem; font-size:.66rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--oliva); background:rgba(92,107,46,.1); padding:.22rem .7rem; border-radius:100px; }
 
-    /* ===========================
-       KIT SECTION
-    =========================== */
-    .kit {
-      padding: 8rem 2rem;
-      background: var(--crema);
-    }
-    .kit__header {
-      text-align: center;
-      margin-bottom: 5rem;
-    }
-    .kit__grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 1.5rem;
-      max-width: 1100px;
-      margin: 0 auto;
-    }
-    .kit-card {
-      background: var(--blanco);
-      border-radius: var(--radius-md);
-      padding: 2rem;
-      box-shadow: var(--shadow-card);
-      transition: transform 0.4s cubic-bezier(0.22,1,0.36,1), box-shadow 0.4s;
-      cursor: none;
-      position: relative;
-      overflow: hidden;
-    }
-    .kit-card::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, rgba(201,148,10,0.05) 0%, transparent 60%);
-      opacity: 0;
-      transition: opacity 0.4s;
-    }
-    .kit-card:hover { transform: translateY(-8px) scale(1.01); box-shadow: var(--shadow-hover); }
-    .kit-card:hover::before { opacity: 1; }
-    .kit-card--featured {
-      background: var(--cafe);
-      grid-column: span 2;
-      display: flex;
-      gap: 2rem;
-      align-items: center;
-    }
-    @media (max-width: 700px) {
-      .kit-card--featured { grid-column: span 1; flex-direction: column; }
-    }
-    .kit-card__icon {
-      width: 52px; height: 52px;
-      background: rgba(201,148,10,0.12);
-      border-radius: var(--radius-sm);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.5rem;
-      margin-bottom: 1.2rem;
-      flex-shrink: 0;
-    }
-    .kit-card--featured .kit-card__icon {
-      width: 72px; height: 72px;
-      background: rgba(201,148,10,0.15);
-      font-size: 2rem;
-      margin-bottom: 0;
-    }
-    .kit-card__title {
-      font-family: var(--font-serif);
-      font-size: 1.25rem;
-      font-weight: 600;
-      color: var(--cafe);
-      margin-bottom: 0.5rem;
-    }
-    .kit-card--featured .kit-card__title { color: var(--crema); font-size: 1.6rem; }
-    .kit-card__desc {
-      font-size: 0.85rem;
-      color: rgba(61,43,31,0.6);
-      line-height: 1.6;
-    }
-    .kit-card--featured .kit-card__desc { color: rgba(245,240,232,0.65); font-size: 0.95rem; }
-    .kit-card__tag {
-      display: inline-block;
-      margin-top: 1rem;
-      font-size: 0.68rem;
-      font-weight: 600;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--dorado);
-      background: rgba(201,148,10,0.1);
-      padding: 0.25rem 0.75rem;
-      border-radius: 100px;
-    }
-    .kit-card--featured .kit-card__tag { background: rgba(201,148,10,0.2); }
+    /* ── RAZAS ── */
+    .breeds { padding:7rem 2rem; background:var(--blanco); overflow:hidden; }
+    .breeds__mq-wrap { overflow:hidden; margin-bottom:.8rem; }
+    .breeds__mq { display:flex; animation:mq 18s linear infinite; width:max-content; }
+    .breeds__mq.rev { animation-direction:reverse; }
+    .btag { font-family:var(--font-serif); font-size:1.3rem; font-style:italic; color:var(--cafe); opacity:.22; padding:0 1.4rem; white-space:nowrap; transition:opacity .3s, color .3s; cursor:none; }
+    .btag:hover { opacity:1; color:var(--dorado); }
+    .btag::after { content:'✦'; font-style:normal; font-size:.55rem; margin-left:1.4rem; vertical-align:middle; opacity:.6; }
 
-    /* ===========================
-       JOURNEY / 21 DAYS
-    =========================== */
-    .journey {
-      padding: 8rem 2rem;
-      background: var(--cafe-light);
-      overflow: hidden;
-    }
-    .journey__header {
-      text-align: center;
-      margin-bottom: 5rem;
-    }
-    .journey__header .section-title { color: var(--crema); }
-    .journey__header .section-label { color: var(--dorado); }
-    .journey__header .section-label::before { color: rgba(201,148,10,0.5); }
+    .breeds__grid { display:grid; grid-template-columns:repeat(5,1fr); gap:1.4rem; max-width:1100px; margin:3.5rem auto 0; }
+    .breed-card { background:#fff; border-radius:var(--radius-md); overflow:hidden; box-shadow:var(--shadow-card); transition:transform .4s cubic-bezier(.22,1,.36,1), box-shadow .4s; cursor:none; border:2px solid transparent; }
+    .breed-card:hover { transform:translateY(-8px) scale(1.02); box-shadow:var(--shadow-hover); border-color:var(--dorado-light); }
+    /* photo area */
+    .breed-card__img { height:155px; display:flex; align-items:center; justify-content:center; position:relative; overflow:hidden; }
+    .breed-card__img-emoji { font-size:5.5rem; line-height:1; position:relative; z-index:1; filter:drop-shadow(0 6px 16px rgba(0,0,0,.25)); }
+    .breed-card:nth-child(1) .breed-card__img::before { content:""; position:absolute; inset:0; background:radial-gradient(circle at 70% 30%,rgba(255,255,255,.45),transparent 60%); }
+    .breed-card:nth-child(5) .breed-card__img::before { content:""; position:absolute; inset:0; background:repeating-linear-gradient(45deg,rgba(0,0,0,.06) 0,rgba(0,0,0,.06) 2px,transparent 2px,transparent 10px); }
+    .breed-card__img::after  { content:''; position:absolute; inset:0; background:linear-gradient(to bottom,transparent 40%,rgba(0,0,0,.3) 100%); }
+    /* breed-specific colors */
+    .breed-card:nth-child(1) .breed-card__img { background:linear-gradient(135deg,#e8e0d0,#c4b898); }
+    .breed-card:nth-child(2) .breed-card__img { background:linear-gradient(135deg,#c8a870,#8a6830); }
+    .breed-card:nth-child(3) .breed-card__img { background:linear-gradient(135deg,#f0e8c0,#d4c470); }
+    .breed-card:nth-child(4) .breed-card__img { background:linear-gradient(135deg,#a0c0a0,#607860); }
+    .breed-card:nth-child(5) .breed-card__img { background:linear-gradient(135deg,#d4a840,#8a6000); }
+    /* breed-specific pattern */
+    .breed-card:nth-child(1) .breed-card__img::before { background:radial-gradient(circle at 70% 30%,rgba(255,255,255,.5),transparent 60%); }
+    .breed-card:nth-child(5) .breed-card__img::before { background:repeating-linear-gradient(45deg,rgba(0,0,0,.06) 0,rgba(0,0,0,.06) 2px,transparent 2px,transparent 10px); }
+    .breed-card__body { padding:1.1rem 1.3rem 1.4rem; }
+    .breed-card__name { font-family:var(--font-serif); font-size:1.1rem; font-weight:600; color:var(--cafe); margin-bottom:.2rem; }
+    .breed-card__origin { font-size:.68rem; color:var(--oliva); letter-spacing:.1em; text-transform:uppercase; font-weight:600; }
+    .breed-card__trait { margin-top:.55rem; font-size:.8rem; color:rgba(28,28,28,.68); line-height:1.55; }
 
-    .journey__weeks {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 2rem;
-      max-width: 1100px;
-      margin: 0 auto;
-      position: relative;
-    }
-    .journey__weeks::before {
-      content: '';
-      position: absolute;
-      top: 42px; left: 15%; right: 15%;
-      height: 2px;
-      background: linear-gradient(to right, var(--dorado), rgba(201,148,10,0.2));
-    }
-    .week-card {
-      background: rgba(245,240,232,0.05);
-      border: 1px solid rgba(201,148,10,0.2);
-      border-radius: var(--radius-md);
-      padding: 2.5rem 2rem;
-      text-align: center;
-      transition: background 0.4s, border-color 0.4s, transform 0.4s;
-    }
-    .week-card:hover {
-      background: rgba(245,240,232,0.09);
-      border-color: rgba(201,148,10,0.5);
-      transform: translateY(-6px);
-    }
-    .week-card__number {
-      font-family: var(--font-fun);
-      font-size: 3.5rem;
-      color: var(--dorado);
-      line-height: 1;
-      margin-bottom: 0.2rem;
-    }
-    .week-card__days {
-      font-size: 0.7rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: rgba(245,240,232,0.7);
-      margin-bottom: 1.5rem;
-    }
-    .week-card__emoji { font-size: 2.5rem; margin-bottom: 1rem; display: block; }
-    .week-card__title {
-      font-family: var(--font-serif);
-      font-size: 1.3rem;
-      color: var(--crema);
-      font-weight: 600;
-      margin-bottom: 0.8rem;
-    }
-    .week-card__desc {
-      font-size: 0.87rem;
-      color: rgba(245,240,232,0.82);
-      line-height: 1.7;
-    }
-    .week-card__steps {
-      margin-top: 1.5rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-      text-align: left;
-    }
-    .week-step {
-      display: flex;
-      align-items: flex-start;
-      gap: 0.6rem;
-      font-size: 0.82rem;
-      color: rgba(245,240,232,0.78);
-    }
-    .week-step::before {
-      content: '→';
-      color: var(--dorado);
-      flex-shrink: 0;
-      margin-top: 0.05em;
-    }
+    /* ── STATS ── */
+    .stats { background:var(--cafe); padding:5rem 2rem; }
+    .stats__grid { display:grid; grid-template-columns:repeat(4,1fr); gap:1px; max-width:900px; margin:0 auto; background:rgba(201,148,10,.15); border-radius:var(--radius-md); overflow:hidden; }
+    .stat { background:var(--cafe); padding:2.5rem 1.5rem; text-align:center; }
+    .stat__num { font-family:var(--font-serif); font-size:2.8rem; font-weight:700; color:var(--dorado-pale); line-height:1; margin-bottom:.4rem; }
+    .stat__label { font-size:.73rem; color:rgba(245,240,232,.72); letter-spacing:.12em; text-transform:uppercase; }
 
-    /* ===========================
-       AUDIENCE
-    =========================== */
-    .audience {
-      padding: 8rem 2rem;
-      background: var(--crema-dark);
-    }
-    .audience__header { text-align: center; margin-bottom: 5rem; }
-    .audience__grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 2rem;
-      max-width: 1000px;
-      margin: 0 auto;
-    }
-    .audience-card {
-      text-align: center;
-      padding: 3rem 2rem;
-      background: var(--blanco);
-      border-radius: var(--radius-lg);
-      box-shadow: var(--shadow-card);
-      transition: transform 0.4s, box-shadow 0.4s;
-      cursor: none;
-    }
-    .audience-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-hover); }
-    .audience-card__emoji { font-size: 3.5rem; margin-bottom: 1.2rem; display: block; }
-    .audience-card__title {
-      font-family: var(--font-serif);
-      font-size: 1.4rem;
-      font-weight: 600;
-      color: var(--cafe);
-      margin-bottom: 0.8rem;
-    }
-    .audience-card__desc {
-      font-size: 0.85rem;
-      color: rgba(61,43,31,0.6);
-      line-height: 1.7;
-    }
-    .audience-card__tag {
-      display: inline-block;
-      margin-top: 1.5rem;
-      font-size: 0.68rem;
-      font-weight: 600;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--oliva);
-      background: rgba(92,107,46,0.1);
-      padding: 0.25rem 0.75rem;
-      border-radius: 100px;
-    }
+    /* ── INFO BAND ── */
+    .info-band { background:var(--oliva); padding:2rem; }
+    .info-band__inner { max-width:1060px; margin:0 auto; display:flex; align-items:center; justify-content:space-around; gap:2rem; flex-wrap:wrap; }
+    .info-item { display:flex; align-items:center; gap:.8rem; color:var(--crema); }
+    .info-item__icon { font-size:1.5rem; flex-shrink:0; }
+    .info-item__body strong { display:block; font-size:.9rem; font-weight:600; }
+    .info-item__body span { font-size:.8rem; opacity:.78; }
 
-    /* ===========================
-       BREEDS SECTION
-    =========================== */
-    .breeds {
-      padding: 8rem 2rem;
-      background: var(--crema);
-      overflow: hidden;
-    }
-    .breeds__header { text-align: center; margin-bottom: 3rem; }
-    .breeds__marquee-wrap {
-      overflow: hidden;
-      margin-bottom: 4rem;
-    }
-    .breeds__marquee {
-      display: flex;
-      gap: 0;
-      animation: marquee 20s linear infinite;
-      width: max-content;
-    }
-    .breeds__marquee.reverse { animation-direction: reverse; }
-    .breed-tag {
-      font-family: var(--font-serif);
-      font-size: 1.4rem;
-      font-style: italic;
-      color: var(--cafe);
-      opacity: 0.25;
-      padding: 0 1.5rem;
-      white-space: nowrap;
-      transition: opacity 0.3s, color 0.3s;
-    }
-    .breed-tag:hover { opacity: 1; color: var(--dorado); }
-    .breed-tag::after {
-      content: '✦';
-      font-style: normal;
-      font-size: 0.6rem;
-      margin-left: 1.5rem;
-      vertical-align: middle;
-      opacity: 0.5;
-    }
+    /* ── CTA ── */
+    .cta-sec { padding:8rem 2rem; background:var(--crema); text-align:center; position:relative; overflow:hidden; }
+    .cta-sec::before { content:''; position:absolute; top:-40%; left:50%; transform:translateX(-50%); width:700px; height:700px; background:radial-gradient(circle,rgba(201,148,10,.07) 0%,transparent 70%); pointer-events:none; }
+    .cta-sec__h2 { font-family:var(--font-serif); font-size:clamp(2.3rem,5vw,4rem); font-weight:600; line-height:1.1; color:var(--cafe); letter-spacing:-.02em; margin-bottom:2rem; }
+    .cta-sec__h2 em { color:var(--dorado); font-style:italic; }
+    .price-big { display:flex; align-items:baseline; justify-content:center; gap:.4rem; margin-bottom:2.5rem; }
+    .price-big__num { font-family:var(--font-serif); font-size:clamp(2.8rem,6vw,4.8rem); font-weight:700; color:var(--cafe); line-height:1; }
+    .price-big__cop { font-size:.95rem; color:rgba(61,43,31,.55); font-weight:500; }
+    .chips { display:flex; flex-wrap:wrap; gap:.8rem; justify-content:center; margin:0 0 2.8rem; }
+    .chip { display:flex; align-items:center; gap:.35rem; font-size:.79rem; color:rgba(28,28,28,.72); background:rgba(61,43,31,.05); border:1px solid rgba(61,43,31,.1); border-radius:100px; padding:.35rem .95rem; }
+    .chip::before { content:'✓'; color:var(--oliva); font-weight:700; }
+    .cta-sec__sub { margin-top:1.4rem; font-size:.8rem; color:rgba(61,43,31,.5); letter-spacing:.07em; }
 
-    .breeds__cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1.5rem;
-      max-width: 1100px;
-      margin: 0 auto;
-    }
-    .breed-card {
-      background: var(--blanco);
-      border-radius: var(--radius-md);
-      overflow: hidden;
-      box-shadow: var(--shadow-card);
-      transition: transform 0.4s cubic-bezier(0.22,1,0.36,1), box-shadow 0.4s;
-      cursor: none;
-      border: 2px solid transparent;
-    }
-    .breed-card:hover {
-      transform: translateY(-8px) scale(1.02);
-      box-shadow: var(--shadow-hover);
-      border-color: var(--dorado-light);
-    }
-    .breed-card__photo {
-      width: 100%;
-      height: 160px;
-      object-fit: cover;
-      display: block;
-    }
-    .breed-card__photo-placeholder {
-      width: 100%;
-      height: 160px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 5rem;
-      position: relative;
-      overflow: hidden;
-    }
-    .breed-card__photo-placeholder::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.18) 100%);
-    }
-    .breed-card__body { padding: 1.2rem 1.4rem 1.4rem; }
-    .breed-card__name {
-      font-family: var(--font-serif);
-      font-size: 1.2rem;
-      font-weight: 600;
-      color: var(--cafe);
-      margin-bottom: 0.25rem;
-    }
-    .breed-card__origin {
-      font-size: 0.72rem;
-      color: var(--oliva);
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      font-weight: 600;
-    }
-    .breed-card__trait {
-      margin-top: 0.65rem;
-      font-size: 0.82rem;
-      color: rgba(61,43,31,0.7);
-      line-height: 1.55;
-    }
+    /* ── FOOTER ── */
+    .footer { background:var(--negro); padding:5rem 2rem 2.5rem; color:var(--crema); }
+    .footer__grid { max-width:1100px; margin:0 auto 3.5rem; display:grid; grid-template-columns:1.5fr 1fr 1fr 1fr; gap:3rem; }
+    .footer__brand-name { font-family:var(--font-serif); font-size:1.75rem; font-weight:600; margin-bottom:.9rem; }
+    .footer__brand-name em { color:var(--dorado); font-style:italic; }
+    .footer__tagline { font-size:.82rem; color:rgba(245,240,232,.62); line-height:1.72; margin-bottom:1.4rem; }
+    .footer__col-title { font-size:.66rem; font-weight:700; letter-spacing:.2em; text-transform:uppercase; color:var(--dorado); margin-bottom:1.1rem; }
+    .footer__col a { display:block; font-size:.84rem; color:rgba(245,240,232,.68); margin-bottom:.65rem; transition:color .3s; }
+    .footer__col a:hover { color:var(--crema); }
+    .footer__hr { max-width:1100px; margin:0 auto 1.8rem; border:none; border-top:1px solid rgba(245,240,232,.08); }
+    .footer__bottom { max-width:1100px; margin:0 auto; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:.8rem; font-size:.74rem; color:rgba(245,240,232,.45); }
 
-    /* ===========================
-       TRUST STATS
-    =========================== */
-    .trust {
-      background: var(--cafe);
-      padding: 5rem 2rem;
-    }
-    .trust__grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 2rem;
-      max-width: 900px;
-      margin: 0 auto;
-      text-align: center;
-    }
-    .trust-stat__number {
-      font-family: var(--font-serif);
-      font-size: 3rem;
-      font-weight: 700;
-      color: var(--dorado-pale);
-      line-height: 1;
-      margin-bottom: 0.4rem;
-    }
-    .trust-stat__label {
-      font-size: 0.75rem;
-      color: rgba(245,240,232,0.75);
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-    }
-    .trust-stat__sep {
-      width: 1px;
-      background: rgba(201,148,10,0.2);
-      margin: 0 auto;
-    }
+    /* ── WA FLOAT ── */
+    .wa-float { position:fixed; bottom:1.8rem; right:1.8rem; width:58px; height:58px; background:#25D366; border-radius:50%; display:flex; align-items:center; justify-content:center; z-index:990; box-shadow:0 6px 28px rgba(37,211,102,.48); transition:transform .3s, box-shadow .3s, opacity .4s; opacity:0; animation:wafloat 3s ease-in-out infinite; }
+    .wa-float:hover { transform:scale(1.1) translateY(-3px)!important; box-shadow:0 10px 38px rgba(37,211,102,.6); }
+    .wa-float svg { width:28px; height:28px; fill:white; }
+    .wa-float__tip { position:absolute; right:66px; background:var(--negro); color:var(--crema); font-size:.76rem; padding:.45rem .85rem; border-radius:var(--radius-sm); white-space:nowrap; opacity:0; transform:translateX(8px); transition:opacity .3s, transform .3s; pointer-events:none; }
+    .wa-float:hover .wa-float__tip { opacity:1; transform:translateX(0); }
+    @keyframes wafloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-5px)} }
 
-    /* ===========================
-       SHIPPING / INFO BAND
-    =========================== */
-    .info-band {
-      background: var(--oliva);
-      padding: 1.8rem 2rem;
+    /* ── RESPONSIVE ── */
+    @media(max-width:900px){
+      .nav__links,.nav__cta-d{display:none}
+      .nav__ham{display:flex}
+      .kit__grid{grid-template-columns:1fr 1fr}
+      .kit-card--feat{grid-column:span 2;grid-template-columns:1fr}
+      .kit-card--feat .kit-card__art{min-height:120px}
+      .journey__grid{grid-template-columns:1fr}
+      .journey__connector{display:none}
+      .audience__grid{grid-template-columns:1fr}
+      .breeds__grid{grid-template-columns:repeat(2,1fr)}
+      .stats__grid{grid-template-columns:repeat(2,1fr)}
+      .footer__grid{grid-template-columns:1fr 1fr;gap:2rem}
+      .hero__badge{display:none}
     }
-    .info-band__inner {
-      max-width: 1000px;
-      margin: 0 auto;
-      display: flex;
-      align-items: center;
-      justify-content: space-around;
-      gap: 2rem;
-      flex-wrap: wrap;
-    }
-    .info-item {
-      display: flex;
-      align-items: center;
-      gap: 0.8rem;
-      color: var(--crema);
-    }
-    .info-item__icon { font-size: 1.4rem; flex-shrink: 0; }
-    .info-item__text { font-size: 0.82rem; font-weight: 500; line-height: 1.4; }
-    .info-item__text strong { display: block; font-size: 0.9rem; }
-
-    /* ===========================
-       FINAL CTA
-    =========================== */
-    .cta-section {
-      padding: 9rem 2rem;
-      background: var(--crema);
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-    }
-    .cta-section::before {
-      content: '';
-      position: absolute;
-      top: -50%; left: 50%;
-      transform: translateX(-50%);
-      width: 800px; height: 800px;
-      background: radial-gradient(circle, rgba(201,148,10,0.08) 0%, transparent 70%);
-      pointer-events: none;
-    }
-    .cta-section .section-label { margin-bottom: 1rem; }
-    .cta-section__headline {
-      font-family: var(--font-serif);
-      font-size: clamp(2.5rem, 5vw, 4.5rem);
-      font-weight: 600;
-      line-height: 1.1;
-      color: var(--cafe);
-      margin-bottom: 2rem;
-      letter-spacing: -0.02em;
-    }
-    .cta-section__headline em { color: var(--dorado); font-style: italic; }
-    .price-block {
-      display: flex;
-      align-items: baseline;
-      justify-content: center;
-      gap: 0.5rem;
-      margin-bottom: 3rem;
-    }
-    .price-block__amount {
-      font-family: var(--font-serif);
-      font-size: clamp(3rem, 6vw, 5rem);
-      font-weight: 700;
-      color: var(--cafe);
-      line-height: 1;
-    }
-    .price-block__currency {
-      font-family: var(--font-sans);
-      font-size: 1rem;
-      color: rgba(61,43,31,0.5);
-      font-weight: 500;
-    }
-    .price-block__period {
-      font-size: 0.8rem;
-      color: rgba(61,43,31,0.4);
-      margin-left: 0.3rem;
-    }
-    .cta-section__includes {
-      display: flex;
-      gap: 1.5rem;
-      justify-content: center;
-      flex-wrap: wrap;
-      margin: 2rem 0 3rem;
-    }
-    .include-chip {
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-      font-size: 0.8rem;
-      color: rgba(61,43,31,0.7);
-      background: rgba(61,43,31,0.05);
-      border: 1px solid rgba(61,43,31,0.1);
-      border-radius: 100px;
-      padding: 0.4rem 1rem;
-    }
-    .include-chip::before { content: '✓'; color: var(--oliva); font-weight: 700; }
-    .cta-section__sub {
-      margin-top: 1.5rem;
-      font-size: 0.82rem;
-      color: rgba(61,43,31,0.45);
-      letter-spacing: 0.08em;
-    }
-
-    /* WhatsApp pulse ring */
-    .btn--whatsapp { position: relative; }
-    .btn--whatsapp::before {
-      content: '';
-      position: absolute;
-      inset: -6px;
-      border: 2px solid rgba(37,211,102,0.4);
-      border-radius: 100px;
-      animation: wa-pulse 2s ease-out infinite;
-    }
-    @keyframes wa-pulse {
-      0% { transform: scale(1); opacity: 0.6; }
-      100% { transform: scale(1.12); opacity: 0; }
-    }
-
-    /* ===========================
-       FOOTER
-    =========================== */
-    .footer {
-      background: var(--negro);
-      padding: 5rem 2rem 3rem;
-      color: var(--crema);
-    }
-    .footer__inner {
-      max-width: 1100px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: 1.5fr 1fr 1fr 1fr;
-      gap: 3rem;
-      margin-bottom: 4rem;
-    }
-    .footer__logo {
-      font-family: var(--font-serif);
-      font-size: 1.8rem;
-      font-weight: 600;
-      color: var(--crema);
-      letter-spacing: -0.02em;
-      margin-bottom: 1rem;
-    }
-    .footer__logo span { color: var(--dorado); font-style: italic; }
-    .footer__tagline {
-      font-size: 0.82rem;
-      color: rgba(245,240,232,0.65);
-      line-height: 1.7;
-      margin-bottom: 1.5rem;
-    }
-    .footer__col-title {
-      font-size: 0.68rem;
-      font-weight: 600;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--dorado);
-      margin-bottom: 1.2rem;
-    }
-    .footer__col a {
-      display: block;
-      font-size: 0.85rem;
-      color: rgba(245,240,232,0.7);
-      margin-bottom: 0.7rem;
-      transition: color 0.3s;
-    }
-    .footer__col a:hover { color: var(--crema); }
-    .footer__divider {
-      border: none;
-      border-top: 1px solid rgba(245,240,232,0.08);
-      margin-bottom: 2rem;
-    }
-    .footer__bottom {
-      max-width: 1100px;
-      margin: 0 auto;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 1rem;
-    }
-    .footer__copy {
-      font-size: 0.75rem;
-      color: rgba(245,240,232,0.5);
-    }
-    .footer__location {
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-      font-size: 0.75rem;
-      color: rgba(245,240,232,0.5);
-    }
-    .footer__location::before { content: '📍'; font-size: 0.9rem; }
-
-    /* ===========================
-       FLOATING WHATSAPP BTN
-    =========================== */
-    .whatsapp-float {
-      position: fixed;
-      bottom: 2rem; right: 2rem;
-      width: 60px; height: 60px;
-      background: #25D366;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 6px 30px rgba(37,211,102,0.5);
-      z-index: 990;
-      transition: transform 0.3s, box-shadow 0.3s;
-      animation: float-bounce 3s ease-in-out infinite;
-    }
-    .whatsapp-float:hover {
-      transform: scale(1.12) translateY(-3px);
-      box-shadow: 0 10px 40px rgba(37,211,102,0.65);
-    }
-    .whatsapp-float svg { width: 30px; height: 30px; fill: white; }
-    @keyframes float-bounce {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-6px); }
-    }
-    .whatsapp-float__tooltip {
-      position: absolute;
-      right: 70px;
-      background: var(--negro);
-      color: var(--crema);
-      font-size: 0.78rem;
-      padding: 0.5rem 0.9rem;
-      border-radius: var(--radius-sm);
-      white-space: nowrap;
-      opacity: 0;
-      transform: translateX(10px);
-      transition: opacity 0.3s, transform 0.3s;
-      pointer-events: none;
-    }
-    .whatsapp-float:hover .whatsapp-float__tooltip {
-      opacity: 1;
-      transform: translateX(0);
-    }
-
-    /* ===========================
-       RESPONSIVE
-    =========================== */
-    @media (max-width: 900px) {
-      .nav__links { display: none; }
-      .nav__cta.desktop-only { display: none; }
-      .nav__hamburger { display: flex; }
-      .journey__weeks { grid-template-columns: 1fr; }
-      .journey__weeks::before { display: none; }
-      .audience__grid { grid-template-columns: 1fr; }
-      .trust__grid { grid-template-columns: repeat(2, 1fr); }
-      .footer__inner { grid-template-columns: 1fr 1fr; gap: 2rem; }
-      .hero__spin-badge { display: none; }
-    }
-    @media (max-width: 600px) {
-      .kit__grid { grid-template-columns: 1fr; }
-      .kit-card--featured { grid-column: 1; }
-      .footer__inner { grid-template-columns: 1fr; }
-      .trust__grid { grid-template-columns: repeat(2, 1fr); }
-      .footer__bottom { flex-direction: column; text-align: center; }
+    @media(max-width:600px){
+      .kit__grid{grid-template-columns:1fr}
+      .kit-card--feat{grid-column:1}
+      .breeds__grid{grid-template-columns:1fr 1fr}
+      .footer__grid{grid-template-columns:1fr}
+      .footer__bottom{flex-direction:column;text-align:center}
     }
   </style>
 </head>
 <body>
 
-  <!-- CURSOR -->
-  <div class="cursor" id="cursor"></div>
-  <div class="cursor-ring" id="cursorRing"></div>
+<!-- CURSOR -->
+<div class="cursor" id="cur"></div>
+<div class="cursor-ring" id="curR"></div>
 
-  <!-- MOBILE MENU -->
-  <div class="mobile-menu" id="mobileMenu">
-    <a href="#kit" class="mobile-link">El Kit</a>
-    <a href="#viaje" class="mobile-link">21 Días</a>
-    <a href="#razas" class="mobile-link">Razas</a>
-    <a href="#para-quien" class="mobile-link">¿Para quién?</a>
-    <a href="https://wa.me/575217263?text=Hola%2C%20me%20interesa%20el%20Kit%20de%20Incubadora%20de%20La%20Granja%20de%20Albita%20%F0%9F%90%A3" target="_blank" rel="noopener" style="color: #25D366;">Pedir por WhatsApp</a>
+<!-- MOBILE MENU -->
+<div class="mob-menu" id="mobMenu">
+  <a href="#kit"        class="mlink">El Kit</a>
+  <a href="#viaje"      class="mlink">21 Días</a>
+  <a href="#razas"      class="mlink">Razas</a>
+  <a href="#para-quien" class="mlink">¿Para quién?</a>
+  <a href="https://wa.me/573005217263?text=Hola%2C%20me%20interesa%20el%20Kit%20de%20Incubadora%20de%20La%20Granja%20de%20Albita%20%F0%9F%90%A3" target="_blank" rel="noopener" style="color:#25D366">Pedir por WhatsApp</a>
+</div>
+
+<!-- NAV -->
+<nav class="nav" id="nav">
+  <div class="nav__logo">La Granja <em>de Albita</em></div>
+  <div class="nav__links">
+    <a href="#kit">El Kit</a>
+    <a href="#viaje">21 Días</a>
+    <a href="#razas">Razas</a>
+    <a href="#para-quien">¿Para quién?</a>
   </div>
+  <a href="https://wa.me/573005217263?text=Hola%2C%20quiero%20pedir%20el%20Kit%20de%20Incubadora%20%F0%9F%90%A3" target="_blank" rel="noopener" class="btn btn--gold nav__cta-d" style="padding:.55rem 1.3rem;font-size:.78rem">Comprar Kit</a>
+  <button class="nav__ham" id="ham" aria-label="Menú"><span></span><span></span><span></span></button>
+</nav>
 
-  <!-- NAVBAR -->
-  <nav class="nav" id="nav">
-    <div class="nav__logo">La Granja <span>de Albita</span></div>
-    <div class="nav__links">
-      <a href="#kit">El Kit</a>
-      <a href="#viaje">21 Días</a>
-      <a href="#razas">Razas</a>
-      <a href="#para-quien">¿Para quién?</a>
+<!-- HERO -->
+<section class="hero" id="hero">
+  <canvas id="heroCanvas"></canvas>
+  <div class="hero__overlay"></div>
+  <div class="hero__badge" aria-hidden="true">
+    <svg viewBox="0 0 100 100"><defs><path id="sc" d="M50,50 m-37,0 a37,37 0 1,1 74,0 a37,37 0 1,1 -74,0"/></defs>
+      <text font-family="'Cormorant Garamond',serif" font-size="10" fill="rgba(240,200,74,0.65)" letter-spacing="3"><textPath href="#sc">Experiencia · 21 días · Colombia · Granja ·</textPath></text>
+    </svg>
+    <div class="hero__badge-center">🥚</div>
+  </div>
+  <div class="hero__content">
+    <p class="hero__tag" id="hTag">Santa Elena · Antioquia · Colombia</p>
+    <h1 class="hero__h1" id="hH1">
+      <span class="ln"><span class="ln-in">21 días que</span></span>
+      <span class="ln"><span class="ln-in"><em>tu familia</em></span></span>
+      <span class="ln"><span class="ln-in">nunca olvidará</span></span>
+    </h1>
+    <p class="hero__sub" id="hSub">Kit de Incubadora · La Granja de Albita</p>
+    <div class="hero__btns" id="hBtns">
+      <a href="https://wa.me/573005217263?text=Hola%2C%20quiero%20pedir%20el%20Kit%20de%20Incubadora%20de%20La%20Granja%20de%20Albita%20%F0%9F%90%A3" target="_blank" rel="noopener" class="btn btn--gold magnetic">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-5"/></svg>
+        Quiero mi Kit
+      </a>
+      <a href="#kit" class="btn btn--outline">Ver qué incluye →</a>
     </div>
-    <a href="https://wa.me/575217263?text=Hola%2C%20me%20interesa%20el%20Kit%20de%20Incubadora%20de%20La%20Granja%20de%20Albita%20%F0%9F%90%A3" target="_blank" rel="noopener" class="btn btn--primary nav__cta desktop-only" style="padding: 0.6rem 1.4rem; font-size: 0.78rem;">
-      Comprar Kit
-    </a>
-    <button class="nav__hamburger" id="hamburger" aria-label="Menú">
-      <span></span><span></span><span></span>
-    </button>
-  </nav>
-
-  <!-- HERO -->
-  <section class="hero" id="hero">
-    <canvas id="heroCanvas"></canvas>
-    <div class="hero__bg-gradient"></div>
-
-    <!-- Spinning badge -->
-    <div class="hero__spin-badge">
-      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <path id="spinCircle" d="M 50,50 m -37,0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0"/>
-        </defs>
-        <text font-family="'Cormorant Garamond', serif" font-size="10" fill="rgba(240,200,74,0.7)" letter-spacing="3">
-          <textPath href="#spinCircle">Experiencia · 21 días · Colombia · Granja ·</textPath>
-        </text>
-      </svg>
-      <div class="hero__spin-center">🥚</div>
-    </div>
-
-    <div class="hero__content">
-      <p class="hero__eyebrow" id="heroEyebrow">Santa Elena · Antioquia · Colombia</p>
-      <h1 class="hero__headline" id="heroHeadline">
-        <span class="line"><span class="line-inner">21 días que</span></span>
-        <span class="line"><span class="line-inner"><em>tu familia</em></span></span>
-        <span class="line"><span class="line-inner">nunca olvidará</span></span>
-      </h1>
-      <p class="hero__subtitle" id="heroSubtitle">Kit de Incubadora · La Granja de Albita</p>
-      <div class="hero__cta-group" id="heroCtaGroup">
-        <a href="https://wa.me/575217263?text=Hola%2C%20quiero%20pedir%20el%20Kit%20de%20Incubadora%20de%20La%20Granja%20de%20Albita%20%F0%9F%90%A3" target="_blank" rel="noopener" class="btn btn--primary magnetic">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-5"/></svg>
-          Quiero mi Kit
-        </a>
-        <a href="#kit" class="btn btn--ghost">Ver qué incluye →</a>
-      </div>
-      <div class="hero__price-badge" id="heroPriceBadge">
-        <span class="price-badge__label">Kit completo</span>
-        <span class="price-badge__price">$998.900</span>
-        <span class="price-badge__currency">COP · Envío a todo Colombia</span>
-      </div>
-    </div>
-    <div class="hero__scroll" id="heroScroll">
-      <span>Descubre</span>
-      <div class="hero__scroll-line"></div>
-    </div>
-  </section>
-
-  <!-- MARQUEE BAND -->
-  <div class="marquee-band" aria-hidden="true">
-    <div class="marquee-track" id="marqueeTrack">
-      <span class="marquee-item">Experiencia familiar</span>
-      <span class="marquee-item">Razas ornamentales</span>
-      <span class="marquee-item">21 días de magia</span>
-      <span class="marquee-item">Santa Elena, Antioquia</span>
-      <span class="marquee-item">Huevos fértiles</span>
-      <span class="marquee-item">Nacimiento en casa</span>
-      <span class="marquee-item">Regalo único</span>
-      <span class="marquee-item">La Granja de Albita</span>
-      <!-- Duplicate for seamless loop -->
-      <span class="marquee-item">Experiencia familiar</span>
-      <span class="marquee-item">Razas ornamentales</span>
-      <span class="marquee-item">21 días de magia</span>
-      <span class="marquee-item">Santa Elena, Antioquia</span>
-      <span class="marquee-item">Huevos fértiles</span>
-      <span class="marquee-item">Nacimiento en casa</span>
-      <span class="marquee-item">Regalo único</span>
-      <span class="marquee-item">La Granja de Albita</span>
+    <div class="hero__price" id="hPrice">
+      <span>Kit completo</span>
+      <span>$998.900</span>
+      <span>COP · Envío a todo Colombia</span>
     </div>
   </div>
+  <div class="hero__scroll-ind" id="hScroll"><span>Descubre</span><div class="hero__scroll-line"></div></div>
+</section>
 
-  <!-- MANIFESTO -->
-  <section class="manifesto" id="manifesto">
-    <p class="manifesto__eyebrow reveal">La filosofía del kit</p>
-    <blockquote class="manifesto__quote" style="font-family: var(--font-serif); font-size: clamp(1.8rem, 4vw, 3.2rem); font-weight: 300; line-height: 1.45; color: var(--crema); max-width: 860px; margin: 0 auto; letter-spacing: -0.01em;">
-      <span class="word-reveal" style="display:block; margin-bottom: 0.15em;">
-        <span class="word"><span class="word-inner">No</span></span>
-        <span class="word"><span class="word-inner">compras</span></span>
-        <span class="word"><span class="word-inner">solo</span></span>
-        <span class="word"><span class="word-inner">huevos</span></span>
-        <span class="word"><span class="word-inner">fértiles:</span></span>
-      </span>
-      <span class="word-reveal" style="display:block; margin-bottom: 0.15em;">
-        <span class="word"><span class="word-inner">llevas</span></span>
-        <span class="word"><span class="word-inner">a</span></span>
-        <span class="word"><span class="word-inner">casa</span></span>
-        <span class="word"><span class="word-inner">un</span></span>
-        <span class="word"><span class="word-inner">proceso</span></span>
-        <span class="word"><span class="word-inner">que</span></span>
-        <span class="word"><span class="word-inner">la</span></span>
-        <span class="word"><span class="word-inner">familia</span></span>
-      </span>
-      <span class="word-reveal" style="display:block;">
-        <span class="word"><span class="word-inner">verá,</span></span>
-        <span class="word"><span class="word-inner">esperará</span></span>
-        <span class="word"><span class="word-inner">y</span></span>
-        <span class="word"><span class="word-inner" style="color: var(--dorado-pale); font-weight: 500; font-style: italic;">recordará.</span></span>
-      </span>
-    </blockquote>
-    <p class="manifesto__sub reveal">— La Granja de Albita · Est. Santa Elena, Antioquia</p>
-  </section>
+<!-- MARQUEE -->
+<div class="mq-band" aria-hidden="true">
+  <div class="mq-track">
+    <span class="mq-item">Experiencia familiar</span><span class="mq-item">Razas ornamentales</span><span class="mq-item">21 días de magia</span><span class="mq-item">Santa Elena, Antioquia</span><span class="mq-item">Huevos fértiles</span><span class="mq-item">Nacimiento en casa</span><span class="mq-item">Regalo único</span><span class="mq-item">La Granja de Albita</span>
+    <span class="mq-item">Experiencia familiar</span><span class="mq-item">Razas ornamentales</span><span class="mq-item">21 días de magia</span><span class="mq-item">Santa Elena, Antioquia</span><span class="mq-item">Huevos fértiles</span><span class="mq-item">Nacimiento en casa</span><span class="mq-item">Regalo único</span><span class="mq-item">La Granja de Albita</span>
+  </div>
+</div>
 
-  <!-- KIT CONTENTS -->
-  <section class="kit" id="kit">
-    <div class="container">
-      <div class="kit__header reveal">
-        <p class="section-label">¿Qué incluye?</p>
-        <h2 class="section-title">Todo lo que necesitas<br><em>para los 21 días</em></h2>
-      </div>
-      <div class="kit__grid">
-        <!-- Featured: Incubadora -->
-        <div class="kit-card kit-card--featured reveal">
-          <div class="kit-card__icon">🌡️</div>
-          <div>
-            <h3 class="kit-card__title">Incubadora automática de mesa</h3>
-            <p class="kit-card__desc">Domo transparente con bandeja circular giratoria, reservorios de agua integrados y panel digital de temperatura. Todo lo que necesitas para el proceso sin complicaciones técnicas.</p>
-            <span class="kit-card__tag">Pieza principal</span>
-          </div>
+<!-- MANIFESTO -->
+<section class="manifesto">
+  <p class="eyebrow sr" style="color:var(--dorado)">La filosofía del kit</p>
+  <blockquote class="manifesto__quote">
+    <span class="ql">
+      <span class="wline sr"><span class="wr"><span class="wr-in">No</span></span><span class="wr"><span class="wr-in">compras</span></span><span class="wr"><span class="wr-in">solo</span></span><span class="wr"><span class="wr-in">huevos</span></span><span class="wr"><span class="wr-in">fértiles:</span></span></span>
+    </span>
+    <span class="ql">
+      <span class="wline sr d1"><span class="wr"><span class="wr-in">llevas</span></span><span class="wr"><span class="wr-in">a</span></span><span class="wr"><span class="wr-in">casa</span></span><span class="wr"><span class="wr-in">un</span></span><span class="wr"><span class="wr-in">proceso</span></span><span class="wr"><span class="wr-in">que</span></span><span class="wr"><span class="wr-in">la</span></span><span class="wr"><span class="wr-in">familia</span></span></span>
+    </span>
+    <span class="ql">
+      <span class="wline sr d2"><span class="wr"><span class="wr-in">verá,</span></span><span class="wr"><span class="wr-in">esperará</span></span><span class="wr"><span class="wr-in">y</span></span><span class="wr"><span class="wr-in"><em>recordará.</em></span></span></span>
+    </span>
+  </blockquote>
+  <p class="manifesto__attr sr d3">— La Granja de Albita · Santa Elena, Antioquia</p>
+</section>
+
+<!-- KIT -->
+<section class="kit" id="kit">
+  <div class="container">
+    <div class="section-header sr">
+      <p class="eyebrow">¿Qué incluye?</p>
+      <h2 class="section-title">Todo lo que necesitas<br><em>para los 21 días</em></h2>
+      <p class="section-body">Un kit completo, pensado para que no tengas que buscar nada más. Todo llega listo para comenzar la experiencia.</p>
+    </div>
+    <div class="kit__grid">
+      <div class="kit-card kit-card--feat sr">
+        <div class="kit-card__art"><span class="kit-card__art-icon">🌡️</span></div>
+        <div class="kit-card__body">
+          <h3 class="kit-card__title">Incubadora automática de mesa</h3>
+          <p class="kit-card__desc">Domo transparente con bandeja circular giratoria, reservorios de agua integrados y panel digital de temperatura y humedad. Automática, silenciosa y perfecta para cualquier rincón del hogar.</p>
+          <span class="kit-card__tag">Pieza principal del kit</span>
         </div>
-
-        <!-- 8 huevos -->
-        <div class="kit-card reveal">
-          <div class="kit-card__icon">🥚</div>
+      </div>
+      <div class="kit-card sr d1">
+        <div class="kit-card__art"><span class="kit-card__art-icon">🥚</span></div>
+        <div class="kit-card__body">
           <h3 class="kit-card__title">8 huevos fértiles</h3>
-          <p class="kit-card__desc">De razas ornamentales seleccionadas directamente en la granja. Cada huevo, una sorpresa.</p>
+          <p class="kit-card__desc">De razas ornamentales seleccionadas directamente en la granja. Cada huevo es una sorpresa viva.</p>
           <span class="kit-card__tag">Razas ornamentales</span>
         </div>
-
-        <!-- Guía -->
-        <div class="kit-card reveal">
-          <div class="kit-card__icon">📖</div>
+      </div>
+      <div class="kit-card sr d2">
+        <div class="kit-card__art"><span class="kit-card__art-icon">📖</span></div>
+        <div class="kit-card__body">
           <h3 class="kit-card__title">Guía impresa 21 días</h3>
-          <p class="kit-card__desc">Instrucciones día a día: temperatura, humedad, volteo y señales de progreso. Simple y emocionante para toda la familia.</p>
-          <span class="kit-card__tag">Educativa</span>
+          <p class="kit-card__desc">Instrucciones día a día: temperatura, humedad, volteo y señales de progreso. Simple para toda la familia.</p>
+          <span class="kit-card__tag">Guía educativa</span>
         </div>
-
-        <!-- Tarjeta de raza -->
-        <div class="kit-card reveal">
-          <div class="kit-card__icon">🃏</div>
+      </div>
+      <div class="kit-card sr d1">
+        <div class="kit-card__art"><span class="kit-card__art-icon">🃏</span></div>
+        <div class="kit-card__body">
           <h3 class="kit-card__title">Tarjeta de raza</h3>
-          <p class="kit-card__desc">Una tarjeta ilustrada con la raza o combinación de tus huevos: historia, características y cuidados del ave.</p>
+          <p class="kit-card__desc">Ilustrada con la raza o combinación de tus huevos: historia, características y cuidados del ave.</p>
           <span class="kit-card__tag">Coleccionable</span>
         </div>
-
-        <!-- Checklist -->
-        <div class="kit-card reveal">
-          <div class="kit-card__icon">✅</div>
+      </div>
+      <div class="kit-card sr d2">
+        <div class="kit-card__art"><span class="kit-card__art-icon">✅</span></div>
+        <div class="kit-card__body">
           <h3 class="kit-card__title">Checklist de primeros cuidados</h3>
           <p class="kit-card__desc">¿Qué hacer cuando nacen? La guía de los primeros 7 días con tus pollitos recién salidos del cascarón.</p>
           <span class="kit-card__tag">Primeros días</span>
         </div>
-
-        <!-- Sello -->
-        <div class="kit-card reveal">
-          <div class="kit-card__icon">🏷️</div>
-          <h3 class="kit-card__title">Sello de experiencia</h3>
-          <p class="kit-card__desc">El sello oficial de La Granja de Albita que certifica tu experiencia. Un recuerdo que perdura.</p>
-          <span class="kit-card__tag">Exclusivo</span>
-        </div>
-
-        <!-- Soporte -->
-        <div class="kit-card reveal">
-          <div class="kit-card__icon">💬</div>
+      </div>
+      <div class="kit-card sr d3">
+        <div class="kit-card__art"><span class="kit-card__art-icon">💬</span></div>
+        <div class="kit-card__body">
           <h3 class="kit-card__title">Soporte WhatsApp</h3>
-          <p class="kit-card__desc">Acompañamiento de la granja durante todo el proceso. Cualquier duda, en cualquier momento de los 21 días.</p>
+          <p class="kit-card__desc">Acompañamiento durante los 21 días del proceso. Cualquier duda, respondemos siempre.</p>
           <span class="kit-card__tag">Todo incluido</span>
         </div>
       </div>
-    </div>
-  </section>
-
-  <!-- 21 DAYS JOURNEY -->
-  <section class="journey" id="viaje">
-    <div class="container">
-      <div class="journey__header reveal">
-        <p class="section-label">El viaje</p>
-        <h2 class="section-title" style="color: var(--crema);">Semana a semana,<br><em>día a día</em></h2>
-      </div>
-      <div class="journey__weeks">
-        <div class="week-card reveal">
-          <div class="week-card__number">01</div>
-          <div class="week-card__days">Días 1 – 7</div>
-          <span class="week-card__emoji">🌱</span>
-          <h3 class="week-card__title">El nido digital empieza</h3>
-          <p class="week-card__desc">Colocas los huevos, ajustas la temperatura y empieza la espera. La familia ya tiene tema de conversación.</p>
-          <div class="week-card__steps">
-            <div class="week-step">Temperatura: 37.5°C constante</div>
-            <div class="week-step">Volteo automático cada hora</div>
-            <div class="week-step">Humedad: 50-55%</div>
-            <div class="week-step">Primeras observaciones en el ovoscopio</div>
-          </div>
-        </div>
-        <div class="week-card reveal">
-          <div class="week-card__number">02</div>
-          <div class="week-card__days">Días 8 – 14</div>
-          <span class="week-card__emoji">💓</span>
-          <h3 class="week-card__title">El embrión crece</h3>
-          <p class="week-card__desc">Con luz puedes ver sombras moverse dentro del huevo. Los niños quedan fascinados con esto.</p>
-          <div class="week-card__steps">
-            <div class="week-step">Ovoscopía para ver el embrión</div>
-            <div class="week-step">Desarrollo de vasos sanguíneos</div>
-            <div class="week-step">El pollito ya tiene forma</div>
-            <div class="week-step">Día 18: cese del volteo</div>
-          </div>
-        </div>
-        <div class="week-card reveal">
-          <div class="week-card__number">03</div>
-          <div class="week-card__days">Días 15 – 21</div>
-          <span class="week-card__emoji">🐣</span>
-          <h3 class="week-card__title">¡El gran momento!</h3>
-          <p class="week-card__desc">El día 21 los pollitos rompen el cascarón. Un momento que la familia recordará para siempre.</p>
-          <div class="week-card__steps">
-            <div class="week-step">Humedad al 65% (lockdown)</div>
-            <div class="week-step">Se escuchan los primeros sonidos</div>
-            <div class="week-step">¡El primer "pip"! (picotazo)</div>
-            <div class="week-step">Nacimiento y primeros pasos</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- AUDIENCE -->
-  <section class="audience" id="para-quien">
-    <div class="container">
-      <div class="audience__header reveal">
-        <p class="section-label">¿Para quién es?</p>
-        <h2 class="section-title">Un regalo que<br><em>conecta generaciones</em></h2>
-      </div>
-      <div class="audience__grid">
-        <div class="audience-card reveal">
-          <span class="audience-card__emoji">👨‍👩‍👧‍👦</span>
-          <h3 class="audience-card__title">Familias con niños</h3>
-          <p class="audience-card__desc">21 días de aprendizaje vivo. Los niños aprenden sobre la vida, la paciencia y el cuidado de un ser vivo. Nada más poderoso que ver nacer algo que cuidas.</p>
-          <span class="audience-card__tag">Educativo y emocional</span>
-        </div>
-        <div class="audience-card reveal">
-          <span class="audience-card__emoji">👴👵</span>
-          <h3 class="audience-card__title">Abuelos y adultos mayores</h3>
-          <p class="audience-card__desc">Una experiencia que los conecta con la naturaleza y con sus nietos. El regalo perfecto que genera conversación, visitas y recuerdos compartidos.</p>
-          <span class="audience-card__tag">Intergeneracional</span>
-        </div>
-        <div class="audience-card reveal">
-          <span class="audience-card__emoji">💑</span>
-          <h3 class="audience-card__title">Parejas jóvenes</h3>
-          <p class="audience-card__desc">Un plan diferente, un hobby que se comparte. Para quienes buscan algo más que gadgets: una experiencia viva, tangible y recordable.</p>
-          <span class="audience-card__tag">Experiencia única</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- BREEDS SECTION -->
-  <section class="breeds" id="razas">
-    <div class="container">
-      <div class="breeds__header reveal">
-        <p class="section-label">Las razas</p>
-        <h2 class="section-title">Aves ornamentales<br><em>de colección</em></h2>
-        <p style="margin-top:1rem; font-size:0.9rem; color:rgba(61,43,31,0.6); max-width:500px; margin-left:auto; margin-right:auto; text-align:center;">Seleccionamos razas ornamentales de entre las más bellas y características del mundo. Cada kit es una sorpresa.</p>
-      </div>
-    </div>
-
-    <!-- Breed marquee 1 -->
-    <div class="breeds__marquee-wrap" style="margin-bottom:1rem;">
-      <div class="breeds__marquee" aria-hidden="true">
-        <span class="breed-tag">Cochin Bantam</span>
-        <span class="breed-tag">Silkie · Gallina Sedosa</span>
-        <span class="breed-tag">Polish · Penacho</span>
-        <span class="breed-tag">Brahma Imperial</span>
-        <span class="breed-tag">Sebright Dorada</span>
-        <span class="breed-tag">Wyandotte</span>
-        <span class="breed-tag">Pekin Bantam</span>
-        <span class="breed-tag">Cochin Bantam</span>
-        <span class="breed-tag">Silkie · Gallina Sedosa</span>
-        <span class="breed-tag">Polish · Penacho</span>
-        <span class="breed-tag">Brahma Imperial</span>
-        <span class="breed-tag">Sebright Dorada</span>
-        <span class="breed-tag">Wyandotte</span>
-        <span class="breed-tag">Pekin Bantam</span>
-      </div>
-    </div>
-    <!-- Breed marquee 2 (reverse) -->
-    <div class="breeds__marquee-wrap" style="margin-bottom:4rem;">
-      <div class="breeds__marquee reverse" aria-hidden="true">
-        <span class="breed-tag">Orpington</span>
-        <span class="breed-tag">Frizzle · Rizo</span>
-        <span class="breed-tag">Sultan Turca</span>
-        <span class="breed-tag">Mille Fleur</span>
-        <span class="breed-tag">Houdan Francesa</span>
-        <span class="breed-tag">Serama Miniatura</span>
-        <span class="breed-tag">La Flèche</span>
-        <span class="breed-tag">Orpington</span>
-        <span class="breed-tag">Frizzle · Rizo</span>
-        <span class="breed-tag">Sultan Turca</span>
-        <span class="breed-tag">Mille Fleur</span>
-        <span class="breed-tag">Houdan Francesa</span>
-        <span class="breed-tag">Serama Miniatura</span>
-        <span class="breed-tag">La Flèche</span>
-      </div>
-    </div>
-
-    <div class="container">
-      <div class="breeds__cards">
-
-        <div class="breed-card reveal">
-          <div class="breed-card__photo-placeholder" style="background: linear-gradient(135deg, #e8dfc8 0%, #d4c9a8 100%);">
-            <img src="https://images.unsplash.com/photo-1548550023-2bdb3c5beed7?w=400&h=320&fit=crop&crop=center" alt="Silkie" class="breed-card__photo" loading="lazy" onerror="this.style.display='none'">
-          </div>
-          <div class="breed-card__body">
-            <div class="breed-card__name">Silkie</div>
-            <div class="breed-card__origin">China · Siglo XIII</div>
-            <div class="breed-card__trait">Plumas de seda, piel negra, temperamento dócil. La gallina más cariñosa del mundo.</div>
-          </div>
-        </div>
-
-        <div class="breed-card reveal">
-          <div class="breed-card__photo-placeholder" style="background: linear-gradient(135deg, #c9b89a 0%, #a89070 100%);">
-            <img src="https://images.unsplash.com/photo-1612170153139-6f881ff067e0?w=400&h=320&fit=crop&crop=center" alt="Brahma Imperial" class="breed-card__photo" loading="lazy" onerror="this.style.display='none'">
-          </div>
-          <div class="breed-card__body">
-            <div class="breed-card__name">Brahma Imperial</div>
-            <div class="breed-card__origin">Asia · Raza gigante</div>
-            <div class="breed-card__trait">Una de las razas más grandes. Imponente, con plumas en las patas y carácter tranquilo.</div>
-          </div>
-        </div>
-
-        <div class="breed-card reveal">
-          <div class="breed-card__photo-placeholder" style="background: linear-gradient(135deg, #f0e8d0 0%, #ddd0b0 100%);">
-            <img src="https://images.unsplash.com/photo-1606567595334-d39972c85dbe?w=400&h=320&fit=crop&crop=center" alt="Polish Penacho" class="breed-card__photo" loading="lazy" onerror="this.style.display='none'">
-          </div>
-          <div class="breed-card__body">
-            <div class="breed-card__name">Polish Penacho</div>
-            <div class="breed-card__origin">Europa · Renacimiento</div>
-            <div class="breed-card__trait">El penacho de plumas en la cabeza la hace inconfundible. Elegante y sorprendente.</div>
-          </div>
-        </div>
-
-        <div class="breed-card reveal">
-          <div class="breed-card__photo-placeholder" style="background: linear-gradient(135deg, #8faa60 0%, #5c6b2e 100%);">
-            <img src="https://images.unsplash.com/photo-1593030761757-71fae45fa0e7?w=400&h=320&fit=crop&crop=center" alt="Cochin Bantam" class="breed-card__photo" loading="lazy" onerror="this.style.display='none'">
-          </div>
-          <div class="breed-card__body">
-            <div class="breed-card__name">Cochin Bantam</div>
-            <div class="breed-card__origin">China · Miniatura</div>
-            <div class="breed-card__trait">Pequeña, esponjosa, con plumas en las patas. Perfecta para espacios pequeños.</div>
-          </div>
-        </div>
-
-        <div class="breed-card reveal">
-          <div class="breed-card__photo-placeholder" style="background: linear-gradient(135deg, #d4a017 0%, #3d2b1f 100%);">
-            <img src="https://images.unsplash.com/photo-1569356144481-bcefd65e20b1?w=400&h=320&fit=crop&crop=center" alt="Sebright Dorada" class="breed-card__photo" loading="lazy" onerror="this.style.display='none'">
-          </div>
-          <div class="breed-card__body">
-            <div class="breed-card__name">Sebright Dorada</div>
-            <div class="breed-card__origin">Inglaterra · 1810</div>
-            <div class="breed-card__trait">Plumas con ribete negro sobre fondo dorado. Obra de arte viva. Raza de ornamento puro.</div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- TRUST / STATS -->
-  <section class="trust">
-    <div class="trust__grid">
-      <div class="trust-stat reveal">
-        <div class="trust-stat__number" data-count="21">0</div>
-        <div class="trust-stat__label">Días de experiencia</div>
-      </div>
-      <div class="trust-stat reveal">
-        <div class="trust-stat__number" data-count="8">0</div>
-        <div class="trust-stat__label">Huevos por kit</div>
-      </div>
-      <div class="trust-stat reveal">
-        <div class="trust-stat__number">🇨🇴</div>
-        <div class="trust-stat__label">Envíos a todo el país</div>
-      </div>
-      <div class="trust-stat reveal">
-        <div class="trust-stat__number" style="font-size:1.4rem; padding-top:0.3rem;">Santa Elena</div>
-        <div class="trust-stat__label">Antioquia · Colombia</div>
-      </div>
-    </div>
-  </section>
-
-  <!-- INFO BAND -->
-  <div class="info-band">
-    <div class="info-band__inner">
-      <div class="info-item">
-        <span class="info-item__icon">📦</span>
-        <div class="info-item__text">
-          <strong>Envío a todo Colombia</strong>
-          Empaque especializado para huevos fértiles
-        </div>
-      </div>
-      <div class="info-item">
-        <span class="info-item__icon">💬</span>
-        <div class="info-item__text">
-          <strong>Soporte WhatsApp</strong>
-          Durante los 21 días del proceso
-        </div>
-      </div>
-      <div class="info-item">
-        <span class="info-item__icon">🌿</span>
-        <div class="info-item__text">
-          <strong>Granja propia</strong>
-          Huevos seleccionados en Santa Elena, Antioquia
-        </div>
-      </div>
-      <div class="info-item">
-        <span class="info-item__icon">🎁</span>
-        <div class="info-item__text">
-          <strong>Listo para regalar</strong>
-          Empaque premium con tarjeta de raza incluida
+      <div class="kit-card sr d4">
+        <div class="kit-card__art"><span class="kit-card__art-icon">🏷️</span></div>
+        <div class="kit-card__body">
+          <h3 class="kit-card__title">Sello de experiencia</h3>
+          <p class="kit-card__desc">El sello oficial de La Granja de Albita que certifica que viviste esta experiencia.</p>
+          <span class="kit-card__tag">Exclusivo</span>
         </div>
       </div>
     </div>
   </div>
+</section>
 
-  <!-- FINAL CTA -->
-  <section class="cta-section" id="comprar">
-    <div class="container" style="position:relative; z-index:1;">
-      <p class="section-label reveal">El kit</p>
-      <h2 class="cta-section__headline reveal">Lista para llevar<br><em>tu experiencia</em> a casa</h2>
-      <div class="price-block reveal">
-        <span class="price-block__amount">$998.900</span>
-        <span class="price-block__currency">COP</span>
+<!-- 21 DÍAS -->
+<section class="journey" id="viaje">
+  <div class="container">
+    <div class="section-header sr">
+      <p class="eyebrow" style="color:var(--dorado)">El viaje</p>
+      <h2 class="section-title section-title--light">Semana a semana,<br><em>día a día</em></h2>
+      <p class="section-body" style="color:rgba(245,240,232,.72)">Tres semanas que transforman una bandeja de huevos en una experiencia que la familia no olvidará.</p>
+    </div>
+    <div class="journey__connector" aria-hidden="true">
+      <div class="jc-node"></div><div class="jc-line"></div>
+      <div class="jc-node"></div><div class="jc-line"></div>
+      <div class="jc-node"></div>
+    </div>
+    <div class="journey__grid">
+      <div class="wk sr">
+        <div class="wk__head">
+          <div class="wk__num">01</div>
+          <div class="wk__meta">
+            <div class="wk__label">Días 1 – 7</div>
+            <div class="wk__title">El nido digital empieza</div>
+          </div>
+        </div>
+        <span class="wk__emoji">🌱</span>
+        <div class="wk__body">
+          <p class="wk__desc">Colocas los huevos, ajustas la temperatura y empieza la espera. La familia ya tiene tema de conversación todas las noches.</p>
+          <div class="wk__steps">
+            <div class="wk__step">Temperatura constante: 37.5°C</div>
+            <div class="wk__step">Volteo automático cada hora</div>
+            <div class="wk__step">Humedad: 50–55%</div>
+            <div class="wk__step">Primeras observaciones con ovoscopio</div>
+          </div>
+        </div>
       </div>
-      <div class="cta-section__includes reveal">
-        <span class="include-chip">Incubadora automática</span>
-        <span class="include-chip">8 huevos fértiles</span>
-        <span class="include-chip">Guía de 21 días</span>
-        <span class="include-chip">Tarjeta de raza</span>
-        <span class="include-chip">Checklist de cuidados</span>
-        <span class="include-chip">Soporte WhatsApp</span>
+      <div class="wk sr d2">
+        <div class="wk__head">
+          <div class="wk__num">02</div>
+          <div class="wk__meta">
+            <div class="wk__label">Días 8 – 14</div>
+            <div class="wk__title">El embrión crece</div>
+          </div>
+        </div>
+        <span class="wk__emoji">💓</span>
+        <div class="wk__body">
+          <p class="wk__desc">Con una linterna puedes ver sombras que se mueven dentro del huevo. Los niños quedan completamente fascinados.</p>
+          <div class="wk__steps">
+            <div class="wk__step">Ovoscopía: se ve el embrión</div>
+            <div class="wk__step">Desarrollo de vasos sanguíneos</div>
+            <div class="wk__step">El pollito ya tiene forma definida</div>
+            <div class="wk__step">Día 18: se detiene el volteo</div>
+          </div>
+        </div>
       </div>
-      <a
-        href="https://wa.me/575217263?text=Hola%2C%20quiero%20pedir%20el%20Kit%20de%20Incubadora%20de%20La%20Granja%20de%20Albita%20%F0%9F%90%A3%20%C2%BFc%C3%B3mo%20hago%20el%20pedido%3F"
-        target="_blank"
-        rel="noopener"
-        class="btn btn--whatsapp btn--xl reveal magnetic"
-      >
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
-          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-        </svg>
-        Pedir por WhatsApp
+      <div class="wk sr d4">
+        <div class="wk__head">
+          <div class="wk__num">03</div>
+          <div class="wk__meta">
+            <div class="wk__label">Días 15 – 21</div>
+            <div class="wk__title">¡El gran momento!</div>
+          </div>
+        </div>
+        <span class="wk__emoji">🐣</span>
+        <div class="wk__body">
+          <p class="wk__desc">El día 21 los pollitos rompen el cascarón. Un momento que se graba en la memoria de todos para siempre.</p>
+          <div class="wk__steps">
+            <div class="wk__step">Humedad al 65% (lockdown)</div>
+            <div class="wk__step">Se escuchan los primeros sonidos</div>
+            <div class="wk__step">¡El primer "pip"! — el picotazo</div>
+            <div class="wk__step">Nacimiento y primeros pasos 🐥</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AUDIENCIA -->
+<section class="audience" id="para-quien">
+  <div class="container">
+    <div class="section-header sr">
+      <p class="eyebrow">¿Para quién es?</p>
+      <h2 class="section-title">Un regalo que<br><em>conecta generaciones</em></h2>
+      <p class="section-body">Diseñado para crear momentos, no solo regalos. Tres audiencias, una misma emoción.</p>
+    </div>
+    <div class="audience__grid">
+      <div class="aud-card sr">
+        <div class="aud-card__art">👨‍👩‍👧‍👦</div>
+        <h3 class="aud-card__title">Familias con niños</h3>
+        <p class="aud-card__desc">21 días de aprendizaje vivo. Los niños aprenden sobre la vida, la paciencia y el cuidado de un ser vivo. Nada más poderoso que ver nacer algo que cuidas tú mismo.</p>
+        <span class="aud-card__tag">Educativo y emocional</span>
+      </div>
+      <div class="aud-card sr d2">
+        <div class="aud-card__art">👴👵</div>
+        <h3 class="aud-card__title">Abuelos</h3>
+        <p class="aud-card__desc">Una experiencia que los conecta con la naturaleza y con sus nietos. El regalo perfecto que genera visitas, conversación y recuerdos compartidos durante semanas.</p>
+        <span class="aud-card__tag">Intergeneracional</span>
+      </div>
+      <div class="aud-card sr d4">
+        <div class="aud-card__art">💑</div>
+        <h3 class="aud-card__title">Parejas jóvenes</h3>
+        <p class="aud-card__desc">Un plan diferente, un hobby que se comparte. Para quienes buscan algo más que gadgets: una experiencia viva, tangible y que se recuerda de verdad.</p>
+        <span class="aud-card__tag">Experiencia única</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RAZAS -->
+<section class="breeds" id="razas">
+  <div class="container">
+    <div class="section-header sr">
+      <p class="eyebrow">Las razas</p>
+      <h2 class="section-title">Aves ornamentales<br><em>de colección</em></h2>
+      <p class="section-body">Seleccionamos razas entre las más bellas y características del mundo. Cada kit es una sorpresa — y cada pollito, una obra de arte.</p>
+    </div>
+  </div>
+  <div class="breeds__mq-wrap"><div class="breeds__mq" aria-hidden="true">
+    <span class="btag">Cochin Bantam</span><span class="btag">Silkie · Gallina Sedosa</span><span class="btag">Polish · Penacho</span><span class="btag">Brahma Imperial</span><span class="btag">Sebright Dorada</span><span class="btag">Wyandotte</span><span class="btag">Pekin Bantam</span>
+    <span class="btag">Cochin Bantam</span><span class="btag">Silkie · Gallina Sedosa</span><span class="btag">Polish · Penacho</span><span class="btag">Brahma Imperial</span><span class="btag">Sebright Dorada</span><span class="btag">Wyandotte</span><span class="btag">Pekin Bantam</span>
+  </div></div>
+  <div class="breeds__mq-wrap" style="margin-bottom:0"><div class="breeds__mq rev" aria-hidden="true">
+    <span class="btag">Orpington</span><span class="btag">Frizzle · Rizo</span><span class="btag">Sultan Turca</span><span class="btag">Mille Fleur</span><span class="btag">Houdan Francesa</span><span class="btag">Serama Miniatura</span><span class="btag">La Flèche</span>
+    <span class="btag">Orpington</span><span class="btag">Frizzle · Rizo</span><span class="btag">Sultan Turca</span><span class="btag">Mille Fleur</span><span class="btag">Houdan Francesa</span><span class="btag">Serama Miniatura</span><span class="btag">La Flèche</span>
+  </div></div>
+
+  <div class="container">
+    <div class="breeds__grid">
+      <div class="breed-card sr">
+        <div class="breed-card__img"><span class="breed-card__img-emoji">🐔</span></div>
+        <div class="breed-card__body">
+          <div class="breed-card__name">Silkie</div>
+          <div class="breed-card__origin">China · Siglo XIII</div>
+          <div class="breed-card__trait">Plumas de seda, piel negra, temperamento ultra dócil. La gallina más cariñosa del mundo.</div>
+        </div>
+      </div>
+      <div class="breed-card sr d1">
+        <div class="breed-card__img"><span class="breed-card__img-emoji">🐓</span></div>
+        <div class="breed-card__body">
+          <div class="breed-card__name">Brahma Imperial</div>
+          <div class="breed-card__origin">Asia · Raza gigante</div>
+          <div class="breed-card__trait">Una de las razas más imponentes del mundo. Plumas en las patas, carácter tranquilo.</div>
+        </div>
+      </div>
+      <div class="breed-card sr d2">
+        <div class="breed-card__img"><span class="breed-card__img-emoji">🦚</span></div>
+        <div class="breed-card__body">
+          <div class="breed-card__name">Polish Penacho</div>
+          <div class="breed-card__origin">Europa · Renacimiento</div>
+          <div class="breed-card__trait">El penacho de plumas en la cabeza la hace inconfundible. Elegante y sorprendente.</div>
+        </div>
+      </div>
+      <div class="breed-card sr d3">
+        <div class="breed-card__img"><span class="breed-card__img-emoji">🐥</span></div>
+        <div class="breed-card__body">
+          <div class="breed-card__name">Cochin Bantam</div>
+          <div class="breed-card__origin">China · Miniatura</div>
+          <div class="breed-card__trait">Pequeña, esponjosa, con plumas en las patas. Perfecta para espacios pequeños.</div>
+        </div>
+      </div>
+      <div class="breed-card sr d4">
+        <div class="breed-card__img"><span class="breed-card__img-emoji">✨</span></div>
+        <div class="breed-card__body">
+          <div class="breed-card__name">Sebright Dorada</div>
+          <div class="breed-card__origin">Inglaterra · 1810</div>
+          <div class="breed-card__trait">Plumas con ribete negro sobre fondo dorado. Obra de arte viva. Raza de ornamento puro.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section class="stats">
+  <div class="stats__grid">
+    <div class="stat sr">
+      <div class="stat__num" data-count="21">0</div>
+      <div class="stat__label">Días de experiencia</div>
+    </div>
+    <div class="stat sr d1">
+      <div class="stat__num" data-count="8">0</div>
+      <div class="stat__label">Huevos por kit</div>
+    </div>
+    <div class="stat sr d2">
+      <div class="stat__num">🇨🇴</div>
+      <div class="stat__label">Envíos a toda Colombia</div>
+    </div>
+    <div class="stat sr d3">
+      <div class="stat__num" style="font-size:1.3rem;padding-top:.4rem">Santa Elena</div>
+      <div class="stat__label">Antioquia · Colombia</div>
+    </div>
+  </div>
+</section>
+
+<!-- INFO BAND -->
+<div class="info-band">
+  <div class="info-band__inner">
+    <div class="info-item sr"><span class="info-item__icon">📦</span><div class="info-item__body"><strong>Envío a toda Colombia</strong><span>Empaque especializado para huevos fértiles</span></div></div>
+    <div class="info-item sr d1"><span class="info-item__icon">💬</span><div class="info-item__body"><strong>Soporte WhatsApp</strong><span>Durante los 21 días del proceso</span></div></div>
+    <div class="info-item sr d2"><span class="info-item__icon">🌿</span><div class="info-item__body"><strong>Granja propia</strong><span>Huevos seleccionados en Santa Elena</span></div></div>
+    <div class="info-item sr d3"><span class="info-item__icon">🎁</span><div class="info-item__body"><strong>Listo para regalar</strong><span>Empaque premium con tarjeta de raza incluida</span></div></div>
+  </div>
+</div>
+
+<!-- CTA FINAL -->
+<section class="cta-sec" id="comprar">
+  <div class="container" style="position:relative;z-index:1">
+    <p class="eyebrow sr">El kit completo</p>
+    <h2 class="cta-sec__h2 sr">Lista para llevar<br><em>tu experiencia</em> a casa</h2>
+    <div class="price-big sr">
+      <span class="price-big__num">$998.900</span>
+      <span class="price-big__cop">COP</span>
+    </div>
+    <div class="chips sr">
+      <span class="chip">Incubadora automática</span>
+      <span class="chip">8 huevos fértiles</span>
+      <span class="chip">Guía de 21 días</span>
+      <span class="chip">Tarjeta de raza</span>
+      <span class="chip">Checklist de cuidados</span>
+      <span class="chip">Soporte WhatsApp</span>
+      <span class="chip">Sello de experiencia</span>
+    </div>
+    <a href="https://wa.me/573005217263?text=Hola%2C%20quiero%20pedir%20el%20Kit%20de%20Incubadora%20de%20La%20Granja%20de%20Albita%20%F0%9F%90%A3%20%C2%BFc%C3%B3mo%20hago%20el%20pedido%3F" target="_blank" rel="noopener" class="btn btn--wa btn--lg sr magnetic">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      Pedir por WhatsApp
+    </a>
+    <p class="cta-sec__sub sr">Envíos a toda Colombia · Soporte durante los 21 días · La Granja de Albita, Santa Elena</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer__grid">
+    <div>
+      <div class="footer__brand-name">La Granja <em>de Albita</em></div>
+      <p class="footer__tagline">Granja de aves ornamentales en Santa Elena, Antioquia. Venta de aves, huevos fértiles y experiencias que conectan familias con la naturaleza.</p>
+      <a href="https://wa.me/573005217263" target="_blank" rel="noopener" class="btn btn--wa" style="font-size:.8rem;padding:.65rem 1.3rem">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        +57 521 7263
       </a>
-      <p class="cta-section__sub reveal">Envíos a toda Colombia · Soporte durante los 21 días · La Granja de Albita, Santa Elena</p>
     </div>
-  </section>
-
-  <!-- FOOTER -->
-  <footer class="footer">
-    <div class="footer__inner">
-      <div>
-        <div class="footer__logo">La Granja <span>de Albita</span></div>
-        <p class="footer__tagline">Granja de aves ornamentales en Santa Elena, Antioquia. Venta de aves, huevos fértiles y experiencias únicas que conectan familias con la naturaleza.</p>
-        <a
-          href="https://wa.me/575217263?text=Hola%2C%20me%20interesa%20La%20Granja%20de%20Albita"
-          target="_blank"
-          rel="noopener"
-          class="btn btn--whatsapp"
-          style="margin-top: 1rem; font-size: 0.82rem; padding: 0.7rem 1.4rem;"
-        >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-          +57 521 7263
-        </a>
-      </div>
-      <div class="footer__col">
-        <p class="footer__col-title">El Kit</p>
-        <a href="#kit">¿Qué incluye?</a>
-        <a href="#viaje">Los 21 días</a>
-        <a href="#razas">Las razas</a>
-        <a href="#comprar">Precio y pedido</a>
-      </div>
-      <div class="footer__col">
-        <p class="footer__col-title">Para quién</p>
-        <a href="#para-quien">Familias con niños</a>
-        <a href="#para-quien">Abuelos</a>
-        <a href="#para-quien">Parejas jóvenes</a>
-        <a href="#para-quien">Regalo especial</a>
-      </div>
-      <div class="footer__col">
-        <p class="footer__col-title">La Granja</p>
-        <a href="#manifesto">Nuestra filosofía</a>
-        <a href="https://wa.me/575217263" target="_blank" rel="noopener">Contáctanos</a>
-        <a href="https://wa.me/575217263?text=Quiero%20visitar%20la%20granja" target="_blank" rel="noopener">Visitar la granja</a>
-      </div>
+    <div class="footer__col">
+      <p class="footer__col-title">El Kit</p>
+      <a href="#kit">¿Qué incluye?</a>
+      <a href="#viaje">Los 21 días</a>
+      <a href="#razas">Las razas</a>
+      <a href="#comprar">Precio y pedido</a>
     </div>
-    <hr class="footer__divider" />
-    <div class="footer__bottom">
-      <p class="footer__copy">© 2025 La Granja de Albita. Todos los derechos reservados.</p>
-      <p class="footer__location">Santa Elena, Antioquia, Colombia</p>
+    <div class="footer__col">
+      <p class="footer__col-title">Para quién</p>
+      <a href="#para-quien">Familias con niños</a>
+      <a href="#para-quien">Abuelos</a>
+      <a href="#para-quien">Parejas jóvenes</a>
+      <a href="#para-quien">Como regalo</a>
     </div>
-  </footer>
+    <div class="footer__col">
+      <p class="footer__col-title">La Granja</p>
+      <a href="#manifesto">Nuestra filosofía</a>
+      <a href="https://wa.me/573005217263" target="_blank" rel="noopener">Contáctanos</a>
+      <a href="https://wa.me/573005217263?text=Quiero%20visitar%20la%20granja" target="_blank" rel="noopener">Visitar la granja</a>
+    </div>
+  </div>
+  <hr class="footer__hr"/>
+  <div class="footer__bottom">
+    <span>© 2025 La Granja de Albita. Todos los derechos reservados.</span>
+    <span>📍 Santa Elena, Antioquia, Colombia</span>
+  </div>
+</footer>
 
-  <!-- FLOATING WHATSAPP -->
-  <a
-    href="https://wa.me/575217263?text=Hola%2C%20me%20interesa%20el%20Kit%20de%20Incubadora%20de%20La%20Granja%20de%20Albita%20%F0%9F%90%A3"
-    target="_blank"
-    rel="noopener"
-    class="whatsapp-float"
-    id="whatsappFloat"
-    aria-label="Contactar por WhatsApp"
-  >
-    <div class="whatsapp-float__tooltip">¡Chatea con nosotros!</div>
-    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-    </svg>
-  </a>
+<!-- WA FLOAT -->
+<a href="https://wa.me/573005217263?text=Hola%2C%20me%20interesa%20el%20Kit%20de%20Incubadora%20de%20La%20Granja%20de%20Albita%20%F0%9F%90%A3" target="_blank" rel="noopener" class="wa-float" id="waFloat" aria-label="WhatsApp">
+  <div class="wa-float__tip">¡Chatea con nosotros!</div>
+  <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
 
-  <!-- ========== SCRIPTS ========== -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+gsap.registerPlugin(ScrollTrigger);
 
-  <script>
-  /* ======================
-     INIT
-  ====================== */
-  gsap.registerPlugin(ScrollTrigger);
+/* CURSOR */
+const cur = document.getElementById('cur');
+const curR = document.getElementById('curR');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px';});
+(function loop(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;curR.style.left=rx+'px';curR.style.top=ry+'px';requestAnimationFrame(loop);})();
+document.querySelectorAll('a,button,.kit-card,.aud-card,.breed-card,.wk').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{cur.classList.add('hov');curR.classList.add('hov');});
+  el.addEventListener('mouseleave',()=>{cur.classList.remove('hov');curR.classList.remove('hov');});
+});
 
-  /* ======================
-     CUSTOM CURSOR
-  ====================== */
-  const cursor = document.getElementById('cursor');
-  const cursorRing = document.getElementById('cursorRing');
-  let mouseX = 0, mouseY = 0;
-  let ringX = 0, ringY = 0;
+/* NAV */
+const nav=document.getElementById('nav');
+const ham=document.getElementById('ham');
+const mob=document.getElementById('mobMenu');
+window.addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>50));
+ham.addEventListener('click',()=>{
+  const o=ham.classList.toggle('open');
+  mob.classList.toggle('open',o);
+  document.body.style.overflow=o?'hidden':'';
+});
+document.querySelectorAll('.mlink').forEach(l=>l.addEventListener('click',()=>{
+  ham.classList.remove('open');mob.classList.remove('open');document.body.style.overflow='';
+}));
 
-  document.addEventListener('mousemove', (e) => {
-    mouseX = e.clientX;
-    mouseY = e.clientY;
-    cursor.style.left = mouseX + 'px';
-    cursor.style.top = mouseY + 'px';
-  });
+/* SMOOTH SCROLL */
+document.querySelectorAll('a[href^="#"]').forEach(l=>l.addEventListener('click',e=>{
+  const t=document.querySelector(l.getAttribute('href'));
+  if(t){e.preventDefault();window.scrollTo({top:t.getBoundingClientRect().top+scrollY-76,behavior:'smooth'});}
+}));
 
-  function animateRing() {
-    ringX += (mouseX - ringX) * 0.12;
-    ringY += (mouseY - ringY) * 0.12;
-    cursorRing.style.left = ringX + 'px';
-    cursorRing.style.top = ringY + 'px';
-    requestAnimationFrame(animateRing);
-  }
-  animateRing();
+/* HERO CANVAS PARTICLES */
+const canvas=document.getElementById('heroCanvas');
+const ctx=canvas.getContext('2d');
+let pts=[];
+function resize(){canvas.width=canvas.offsetWidth;canvas.height=canvas.offsetHeight;}
+resize();window.addEventListener('resize',()=>{resize();initPts();});
+class Pt{
+  reset(){this.x=Math.random()*canvas.width;this.y=canvas.height+Math.random()*80;this.s=Math.random()*2.5+.8;this.vy=Math.random()*.7+.25;this.vx=(Math.random()-.5)*.5;this.a=Math.random()*.45+.08;this.c=Math.random()>.55?'#C9940A':Math.random()>.5?'#7A8F40':'#F0C84A';}
+  constructor(){this.reset();}
+  tick(){this.y-=this.vy;this.x+=this.vx;this.a-=.0011;if(this.y<-10||this.a<=0)this.reset();}
+  draw(){ctx.save();ctx.globalAlpha=this.a;ctx.fillStyle=this.c;ctx.translate(this.x,this.y);ctx.rotate(Math.PI/4);ctx.fillRect(-this.s/2,-this.s/2,this.s,this.s);ctx.restore();}
+}
+function initPts(){pts=[];const n=Math.min(Math.floor(canvas.width/8),110);for(let i=0;i<n;i++){const p=new Pt();p.y=Math.random()*canvas.height;pts.push(p);}}
+function loop(){ctx.clearRect(0,0,canvas.width,canvas.height);pts.forEach(p=>{p.tick();p.draw();});requestAnimationFrame(loop);}
+initPts();loop();
+canvas.addEventListener('mousemove',e=>{const r=canvas.getBoundingClientRect(),ex=e.clientX-r.left,ey=e.clientY-r.top;pts.forEach(p=>{const dx=p.x-ex,dy=p.y-ey,d=Math.sqrt(dx*dx+dy*dy);if(d<75){p.vx+=(dx/d)*.28;p.vy-=.35;}});});
 
-  document.querySelectorAll('a, button, .kit-card, .audience-card, .breed-card, .week-card').forEach(el => {
-    el.addEventListener('mouseenter', () => { cursor.classList.add('hovered'); cursorRing.classList.add('hovered'); });
-    el.addEventListener('mouseleave', () => { cursor.classList.remove('hovered'); cursorRing.classList.remove('hovered'); });
-  });
+/* HERO ENTRANCE */
+const htl=gsap.timeline({delay:.15});
+htl.to('#hH1 .ln-in',{y:'0%',duration:1.1,stagger:.15,ease:'power4.out'})
+   .to('#hTag',{opacity:1,duration:.8,ease:'power3.out'},'-=.6')
+   .to('#hSub',{opacity:1,duration:.8,ease:'power3.out'},'-=.55')
+   .to('#hBtns',{opacity:1,duration:.8,ease:'power3.out'},'-=.5')
+   .to('#hPrice',{opacity:1,duration:.8,ease:'power3.out'},'-=.45')
+   .to('#hScroll',{opacity:1,duration:.8,ease:'power3.out'},'-=.4');
 
-  /* ======================
-     NAVBAR
-  ====================== */
-  const nav = document.getElementById('nav');
-  const hamburger = document.getElementById('hamburger');
-  const mobileMenu = document.getElementById('mobileMenu');
+/* PARALLAX HERO */
+gsap.to('.hero__content',{y:-70,ease:'none',scrollTrigger:{trigger:'.hero',start:'top top',end:'bottom top',scrub:1.5}});
 
-  window.addEventListener('scroll', () => {
-    nav.classList.toggle('scrolled', window.scrollY > 50);
-  });
-
-  hamburger.addEventListener('click', () => {
-    const isOpen = hamburger.classList.toggle('open');
-    mobileMenu.classList.toggle('open', isOpen);
-    document.body.style.overflow = isOpen ? 'hidden' : '';
-  });
-
-  document.querySelectorAll('.mobile-link').forEach(link => {
-    link.addEventListener('click', () => {
-      hamburger.classList.remove('open');
-      mobileMenu.classList.remove('open');
-      document.body.style.overflow = '';
-    });
-  });
-
-  /* ======================
-     HERO CANVAS PARTICLES
-  ====================== */
-  const canvas = document.getElementById('heroCanvas');
-  const ctx = canvas.getContext('2d');
-  let particles = [];
-  let animId;
-
-  function resizeCanvas() {
-    canvas.width = canvas.offsetWidth;
-    canvas.height = canvas.offsetHeight;
-  }
-  resizeCanvas();
-  window.addEventListener('resize', () => { resizeCanvas(); initParticles(); });
-
-  class Particle {
-    constructor() { this.reset(); }
-    reset() {
-      this.x = Math.random() * canvas.width;
-      this.y = canvas.height + Math.random() * 100;
-      this.size = Math.random() * 3 + 1;
-      this.speedY = Math.random() * 0.8 + 0.3;
-      this.speedX = (Math.random() - 0.5) * 0.6;
-      this.opacity = Math.random() * 0.5 + 0.1;
-      this.hue = Math.random() > 0.6 ? 45 : (Math.random() > 0.5 ? 80 : 30);
-    }
-    update() {
-      this.y -= this.speedY;
-      this.x += this.speedX;
-      this.opacity -= 0.0012;
-      if (this.y < -20 || this.opacity <= 0) this.reset();
-    }
-    draw() {
-      ctx.save();
-      ctx.globalAlpha = this.opacity;
-      ctx.fillStyle = this.hue === 45 ? '#C9940A' : (this.hue === 80 ? '#7A8F40' : '#F0C84A');
-      ctx.beginPath();
-      // Draw as a small diamond/sparkle
-      ctx.translate(this.x, this.y);
-      ctx.rotate(Math.PI / 4);
-      ctx.fillRect(-this.size/2, -this.size/2, this.size, this.size);
-      ctx.restore();
-    }
-  }
-
-  function initParticles() {
-    particles = [];
-    const count = Math.min(Math.floor(canvas.width / 8), 120);
-    for (let i = 0; i < count; i++) {
-      const p = new Particle();
-      p.y = Math.random() * canvas.height; // scatter on init
-      particles.push(p);
-    }
-  }
-
-  function animateParticles() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    particles.forEach(p => { p.update(); p.draw(); });
-    animId = requestAnimationFrame(animateParticles);
-  }
-
-  initParticles();
-  animateParticles();
-
-  // Mouse interaction: particles scatter near cursor
-  canvas.addEventListener('mousemove', (e) => {
-    const rect = canvas.getBoundingClientRect();
-    const mx = e.clientX - rect.left;
-    const my = e.clientY - rect.top;
-    particles.forEach(p => {
-      const dx = p.x - mx;
-      const dy = p.y - my;
-      const dist = Math.sqrt(dx*dx + dy*dy);
-      if (dist < 80) {
-        p.speedX += (dx / dist) * 0.3;
-        p.speedY -= 0.4;
-      }
-    });
-  });
-
-  /* ======================
-     HERO ANIMATIONS (GSAP)
-  ====================== */
-  const heroTl = gsap.timeline({ delay: 0.2 });
-
-  // Animate hero line-inners in
-  heroTl
-    .to('#heroHeadline .line-inner', {
-      y: '0%',
-      duration: 1.1,
-      stagger: 0.15,
-      ease: 'power4.out'
-    })
-    .to('#heroEyebrow', { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, '-=0.6')
-    .to('#heroSubtitle', { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, '-=0.5')
-    .to('#heroCtaGroup', { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, '-=0.5')
-    .to('#heroPriceBadge', { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, '-=0.4')
-    .to('#heroScroll', { opacity: 1, duration: 0.8, ease: 'power3.out' }, '-=0.3');
-
-  // Parallax on hero content
-  gsap.to('.hero__content', {
-    y: -80,
-    ease: 'none',
-    scrollTrigger: {
-      trigger: '.hero',
-      start: 'top top',
-      end: 'bottom top',
-      scrub: 1.5
+/* SCROLL REVEAL — single IntersectionObserver, no GSAP opacity conflict */
+const io=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.classList.add('on');
+      /* word-line trigger */
+      if(e.target.classList.contains('wline')) e.target.classList.add('on');
+      io.unobserve(e.target);
     }
   });
+},{threshold:.12,rootMargin:'0px 0px -30px 0px'});
+document.querySelectorAll('.sr,.sr-l,.sr-r,.sr-scale,.wline').forEach(el=>io.observe(el));
 
-  /* ======================
-     SCROLL REVEAL OBSERVER
-  ====================== */
-  const revealObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-        revealObserver.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+/* COUNTERS */
+document.querySelectorAll('[data-count]').forEach(el=>{
+  ScrollTrigger.create({trigger:el,start:'top 88%',once:true,onEnter:()=>{
+    gsap.to({v:0},{v:+el.dataset.count,duration:1.4,ease:'power2.out',onUpdate:function(){el.textContent=Math.round(this.targets()[0].v);}});
+  }});
+});
 
-  document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+/* MAGNETIC BUTTONS */
+document.querySelectorAll('.magnetic').forEach(b=>{
+  b.addEventListener('mousemove',e=>{const r=b.getBoundingClientRect(),x=e.clientX-r.left-r.width/2,y=e.clientY-r.top-r.height/2;gsap.to(b,{x:x*.22,y:y*.22,duration:.4,ease:'power2.out'});});
+  b.addEventListener('mouseleave',()=>gsap.to(b,{x:0,y:0,duration:.6,ease:'elastic.out(1,.5)'}));
+});
 
-  /* ======================
-     WORD REVEAL OBSERVER
-  ====================== */
-  const wordObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-        wordObserver.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.2 });
+/* CARD TILT */
+document.querySelectorAll('.kit-card,.aud-card,.breed-card').forEach(c=>{
+  c.addEventListener('mousemove',e=>{const r=c.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;gsap.to(c,{rotateY:x*7,rotateX:-y*7,transformPerspective:800,duration:.4,ease:'power2.out'});});
+  c.addEventListener('mouseleave',()=>gsap.to(c,{rotateY:0,rotateX:0,duration:.6,ease:'elastic.out(1,.5)'}));
+});
 
-  document.querySelectorAll('.word-reveal').forEach(el => wordObserver.observe(el));
+/* WA FLOAT visibility */
+const waf=document.getElementById('waFloat');
+window.addEventListener('scroll',()=>{waf.style.opacity=scrollY>380?'1':'0';},{ passive:true });
 
-  /* ======================
-     GSAP SCROLL ANIMATIONS
-  ====================== */
-
-  // Kit cards stagger
-  gsap.from('.kit-card', {
-    y: 50, opacity: 0, stagger: 0.1,
-    duration: 0.8, ease: 'power3.out',
-    scrollTrigger: {
-      trigger: '.kit__grid',
-      start: 'top 80%'
-    }
-  });
-
-  // Journey weeks
-  gsap.from('.week-card', {
-    y: 60, opacity: 0, stagger: 0.2,
-    duration: 0.9, ease: 'power3.out',
-    scrollTrigger: {
-      trigger: '.journey__weeks',
-      start: 'top 75%'
-    }
-  });
-
-  // Audience cards
-  gsap.from('.audience-card', {
-    scale: 0.92, opacity: 0, stagger: 0.15,
-    duration: 0.8, ease: 'back.out(1.4)',
-    scrollTrigger: {
-      trigger: '.audience__grid',
-      start: 'top 78%'
-    }
-  });
-
-  // Breed cards
-  gsap.from('.breed-card', {
-    y: 40, opacity: 0, stagger: 0.1,
-    duration: 0.7, ease: 'power3.out',
-    scrollTrigger: {
-      trigger: '.breeds__cards',
-      start: 'top 80%'
-    }
-  });
-
-  // CTA section headline
-  gsap.from('.cta-section__headline', {
-    y: 40, opacity: 0,
-    duration: 1, ease: 'power3.out',
-    scrollTrigger: {
-      trigger: '.cta-section',
-      start: 'top 75%'
-    }
-  });
-
-  // Price block
-  gsap.from('.price-block', {
-    scale: 0.8, opacity: 0,
-    duration: 0.9, ease: 'back.out(1.7)',
-    scrollTrigger: {
-      trigger: '.price-block',
-      start: 'top 80%'
-    }
-  });
-
-  // Section titles
-  gsap.utils.toArray('.section-title').forEach(title => {
-    gsap.from(title, {
-      y: 30, opacity: 0,
-      duration: 0.9, ease: 'power3.out',
-      scrollTrigger: {
-        trigger: title,
-        start: 'top 85%'
-      }
-    });
-  });
-
-  // Manifesto background parallax
-  gsap.to('.manifesto', {
-    backgroundPositionY: '40%',
-    ease: 'none',
-    scrollTrigger: {
-      trigger: '.manifesto',
-      start: 'top bottom',
-      end: 'bottom top',
-      scrub: 2
-    }
-  });
-
-  /* ======================
-     COUNTER ANIMATION
-  ====================== */
-  document.querySelectorAll('[data-count]').forEach(el => {
-    const target = parseInt(el.dataset.count);
-    ScrollTrigger.create({
-      trigger: el,
-      start: 'top 85%',
-      once: true,
-      onEnter: () => {
-        gsap.to({ val: 0 }, {
-          val: target,
-          duration: 1.5,
-          ease: 'power2.out',
-          onUpdate: function() {
-            el.textContent = Math.round(this.targets()[0].val);
-          }
-        });
-      }
-    });
-  });
-
-  /* ======================
-     MAGNETIC BUTTONS
-  ====================== */
-  document.querySelectorAll('.magnetic').forEach(btn => {
-    btn.addEventListener('mousemove', (e) => {
-      const rect = btn.getBoundingClientRect();
-      const x = e.clientX - rect.left - rect.width / 2;
-      const y = e.clientY - rect.top - rect.height / 2;
-      gsap.to(btn, { x: x * 0.25, y: y * 0.25, duration: 0.4, ease: 'power2.out' });
-    });
-    btn.addEventListener('mouseleave', () => {
-      gsap.to(btn, { x: 0, y: 0, duration: 0.6, ease: 'elastic.out(1, 0.5)' });
-    });
-  });
-
-  /* ======================
-     CARD TILT EFFECT
-  ====================== */
-  document.querySelectorAll('.kit-card, .audience-card, .breed-card').forEach(card => {
-    card.addEventListener('mousemove', (e) => {
-      const rect = card.getBoundingClientRect();
-      const x = (e.clientX - rect.left) / rect.width - 0.5;
-      const y = (e.clientY - rect.top) / rect.height - 0.5;
-      gsap.to(card, {
-        rotateY: x * 8,
-        rotateX: -y * 8,
-        transformPerspective: 800,
-        duration: 0.4,
-        ease: 'power2.out'
-      });
-    });
-    card.addEventListener('mouseleave', () => {
-      gsap.to(card, {
-        rotateY: 0, rotateX: 0,
-        duration: 0.6, ease: 'elastic.out(1, 0.5)'
-      });
-    });
-  });
-
-  /* ======================
-     SMOOTH SCROLL FOR NAV LINKS
-  ====================== */
-  document.querySelectorAll('a[href^="#"]').forEach(link => {
-    link.addEventListener('click', (e) => {
-      const target = document.querySelector(link.getAttribute('href'));
-      if (target) {
-        e.preventDefault();
-        const offset = 80;
-        const top = target.getBoundingClientRect().top + window.scrollY - offset;
-        window.scrollTo({ top, behavior: 'smooth' });
-      }
-    });
-  });
-
-  /* ======================
-     TRUST STATS ANIMATION
-  ====================== */
-  gsap.from('.trust-stat', {
-    y: 30, opacity: 0, stagger: 0.15,
-    duration: 0.8, ease: 'power3.out',
-    scrollTrigger: {
-      trigger: '.trust__grid',
-      start: 'top 80%'
-    }
-  });
-
-  /* ======================
-     FOOTER ANIMATION
-  ====================== */
-  gsap.from('.footer__inner > *', {
-    y: 30, opacity: 0, stagger: 0.12,
-    duration: 0.7, ease: 'power3.out',
-    scrollTrigger: {
-      trigger: '.footer',
-      start: 'top 85%'
-    }
-  });
-
-  /* ======================
-     FLOATING WA BTN SHOW ON SCROLL
-  ====================== */
-  const waFloat = document.getElementById('whatsappFloat');
-  window.addEventListener('scroll', () => {
-    if (window.scrollY > 400) {
-      waFloat.style.opacity = '1';
-      waFloat.style.transform = 'translateY(0)';
-    } else {
-      waFloat.style.opacity = '0';
-      waFloat.style.transform = 'translateY(20px)';
-    }
-  });
-  waFloat.style.opacity = '0';
-  waFloat.style.transform = 'translateY(20px)';
-  waFloat.style.transition = 'opacity 0.4s, transform 0.4s';
-
-  /* ======================
-     INFO BAND ITEMS
-  ====================== */
-  gsap.from('.info-item', {
-    x: -20, opacity: 0, stagger: 0.1,
-    duration: 0.7, ease: 'power3.out',
-    scrollTrigger: {
-      trigger: '.info-band',
-      start: 'top 85%'
-    }
-  });
-
-  /* ======================
-     SCROLLTRIGGER REFRESH
-  ====================== */
-  ScrollTrigger.refresh();
-
-  </script>
+ScrollTrigger.refresh();
+</script>
 </body>
 </html>
