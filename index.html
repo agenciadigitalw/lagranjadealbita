@@ -215,11 +215,14 @@
       font-family: var(--font-serif);
       font-size: 1.4rem;
       font-weight: 600;
-      color: var(--cafe);
+      color: var(--crema);
       letter-spacing: -0.02em;
       line-height: 1;
+      transition: color 0.4s;
     }
     .nav__logo span { color: var(--dorado); font-style: italic; }
+    .nav.scrolled .nav__logo { color: var(--cafe); }
+    .nav.scrolled .nav__logo span { color: var(--dorado); }
     .nav__links {
       display: flex;
       gap: 2.2rem;
@@ -230,10 +233,11 @@
       font-weight: 500;
       letter-spacing: 0.08em;
       text-transform: uppercase;
-      color: var(--cafe);
+      color: rgba(245,240,232,0.85);
       position: relative;
       transition: color 0.3s;
     }
+    .nav.scrolled .nav__links a { color: var(--cafe); }
     .nav__links a::after {
       content: '';
       position: absolute;
@@ -259,10 +263,11 @@
     .nav__hamburger span {
       display: block;
       width: 24px; height: 2px;
-      background: var(--cafe);
+      background: var(--crema);
       border-radius: 2px;
-      transition: transform 0.3s, opacity 0.3s;
+      transition: transform 0.3s, opacity 0.3s, background 0.4s;
     }
+    .nav.scrolled .nav__hamburger span { background: var(--cafe); }
     .nav__hamburger.open span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
     .nav__hamburger.open span:nth-child(2) { opacity: 0; }
     .nav__hamburger.open span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
@@ -340,6 +345,7 @@
       color: var(--crema);
       letter-spacing: -0.02em;
       margin-bottom: 1.8rem;
+      text-shadow: 0 2px 30px rgba(0,0,0,0.4);
     }
     .hero__headline .line { display: block; overflow: hidden; }
     .hero__headline .line-inner {
@@ -535,20 +541,31 @@
       display: inline-block;
       overflow: hidden;
       vertical-align: bottom;
+      margin-right: 0.25em;
     }
     .word-reveal .word-inner {
       display: inline-block;
-      transform: translateY(100%);
-      transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+      transform: translateY(105%);
+      transition: transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
     }
     .word-reveal.visible .word-inner { transform: translateY(0); }
-    .word-reveal .word:nth-child(2) .word-inner { transition-delay: 0.08s; }
-    .word-reveal .word:nth-child(3) .word-inner { transition-delay: 0.16s; }
-    .word-reveal .word:nth-child(4) .word-inner { transition-delay: 0.24s; }
-    .word-reveal .word:nth-child(5) .word-inner { transition-delay: 0.32s; }
-    .word-reveal .word:nth-child(6) .word-inner { transition-delay: 0.40s; }
-    .word-reveal .word:nth-child(7) .word-inner { transition-delay: 0.48s; }
-    .word-reveal .word:nth-child(8) .word-inner { transition-delay: 0.56s; }
+    .word-reveal .word:nth-child(2)  .word-inner { transition-delay: 0.07s; }
+    .word-reveal .word:nth-child(3)  .word-inner { transition-delay: 0.14s; }
+    .word-reveal .word:nth-child(4)  .word-inner { transition-delay: 0.21s; }
+    .word-reveal .word:nth-child(5)  .word-inner { transition-delay: 0.28s; }
+    .word-reveal .word:nth-child(6)  .word-inner { transition-delay: 0.35s; }
+    .word-reveal .word:nth-child(7)  .word-inner { transition-delay: 0.42s; }
+    .word-reveal .word:nth-child(8)  .word-inner { transition-delay: 0.49s; }
+    .word-reveal .word:nth-child(9)  .word-inner { transition-delay: 0.56s; }
+    .word-reveal .word:nth-child(10) .word-inner { transition-delay: 0.63s; }
+    .word-reveal .word:nth-child(11) .word-inner { transition-delay: 0.70s; }
+    .word-reveal .word:nth-child(12) .word-inner { transition-delay: 0.77s; }
+    .word-reveal .word:nth-child(13) .word-inner { transition-delay: 0.84s; }
+    .word-reveal .word:nth-child(14) .word-inner { transition-delay: 0.91s; }
+    .word-reveal .word:nth-child(15) .word-inner { transition-delay: 0.98s; }
+    .word-reveal .word:nth-child(16) .word-inner { transition-delay: 1.05s; }
+    .word-reveal .word:nth-child(17) .word-inner { transition-delay: 1.12s; }
+    .word-reveal .word:nth-child(18) .word-inner { transition-delay: 1.19s; }
 
     /* ===========================
        KIT SECTION
@@ -698,7 +715,7 @@
       font-size: 0.7rem;
       letter-spacing: 0.2em;
       text-transform: uppercase;
-      color: rgba(245,240,232,0.4);
+      color: rgba(245,240,232,0.7);
       margin-bottom: 1.5rem;
     }
     .week-card__emoji { font-size: 2.5rem; margin-bottom: 1rem; display: block; }
@@ -710,8 +727,8 @@
       margin-bottom: 0.8rem;
     }
     .week-card__desc {
-      font-size: 0.83rem;
-      color: rgba(245,240,232,0.55);
+      font-size: 0.87rem;
+      color: rgba(245,240,232,0.82);
       line-height: 1.7;
     }
     .week-card__steps {
@@ -725,8 +742,8 @@
       display: flex;
       align-items: flex-start;
       gap: 0.6rem;
-      font-size: 0.8rem;
-      color: rgba(245,240,232,0.55);
+      font-size: 0.82rem;
+      color: rgba(245,240,232,0.78);
     }
     .week-step::before {
       content: '→';
@@ -836,37 +853,59 @@
     .breed-card {
       background: var(--blanco);
       border-radius: var(--radius-md);
-      padding: 1.8rem;
-      text-align: center;
+      overflow: hidden;
       box-shadow: var(--shadow-card);
-      transition: transform 0.4s, box-shadow 0.4s;
+      transition: transform 0.4s cubic-bezier(0.22,1,0.36,1), box-shadow 0.4s;
       cursor: none;
       border: 2px solid transparent;
     }
     .breed-card:hover {
-      transform: translateY(-6px) scale(1.02);
+      transform: translateY(-8px) scale(1.02);
       box-shadow: var(--shadow-hover);
       border-color: var(--dorado-light);
     }
-    .breed-card__emoji { font-size: 3rem; margin-bottom: 1rem; display: block; }
+    .breed-card__photo {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      display: block;
+    }
+    .breed-card__photo-placeholder {
+      width: 100%;
+      height: 160px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .breed-card__photo-placeholder::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.18) 100%);
+    }
+    .breed-card__body { padding: 1.2rem 1.4rem 1.4rem; }
     .breed-card__name {
       font-family: var(--font-serif);
-      font-size: 1.15rem;
+      font-size: 1.2rem;
       font-weight: 600;
       color: var(--cafe);
-      margin-bottom: 0.4rem;
+      margin-bottom: 0.25rem;
     }
     .breed-card__origin {
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       color: var(--oliva);
-      letter-spacing: 0.08em;
+      letter-spacing: 0.1em;
       text-transform: uppercase;
+      font-weight: 600;
     }
     .breed-card__trait {
-      margin-top: 0.8rem;
-      font-size: 0.8rem;
-      color: rgba(61,43,31,0.55);
-      line-height: 1.5;
+      margin-top: 0.65rem;
+      font-size: 0.82rem;
+      color: rgba(61,43,31,0.7);
+      line-height: 1.55;
     }
 
     /* ===========================
@@ -894,7 +933,7 @@
     }
     .trust-stat__label {
       font-size: 0.75rem;
-      color: rgba(245,240,232,0.5);
+      color: rgba(245,240,232,0.75);
       letter-spacing: 0.1em;
       text-transform: uppercase;
     }
@@ -1053,7 +1092,7 @@
     .footer__logo span { color: var(--dorado); font-style: italic; }
     .footer__tagline {
       font-size: 0.82rem;
-      color: rgba(245,240,232,0.4);
+      color: rgba(245,240,232,0.65);
       line-height: 1.7;
       margin-bottom: 1.5rem;
     }
@@ -1068,7 +1107,7 @@
     .footer__col a {
       display: block;
       font-size: 0.85rem;
-      color: rgba(245,240,232,0.5);
+      color: rgba(245,240,232,0.7);
       margin-bottom: 0.7rem;
       transition: color 0.3s;
     }
@@ -1089,14 +1128,14 @@
     }
     .footer__copy {
       font-size: 0.75rem;
-      color: rgba(245,240,232,0.25);
+      color: rgba(245,240,232,0.5);
     }
     .footer__location {
       display: flex;
       align-items: center;
       gap: 0.4rem;
       font-size: 0.75rem;
-      color: rgba(245,240,232,0.25);
+      color: rgba(245,240,232,0.5);
     }
     .footer__location::before { content: '📍'; font-size: 0.9rem; }
 
@@ -1271,27 +1310,30 @@
   <!-- MANIFESTO -->
   <section class="manifesto" id="manifesto">
     <p class="manifesto__eyebrow reveal">La filosofía del kit</p>
-    <blockquote class="word-reveal">
-      <span class="word"><span class="word-inner">No</span></span>
-      <span class="word"><span class="word-inner">compras</span></span>
-      <span class="word"><span class="word-inner">solo</span></span>
-      <span class="word"><span class="word-inner">huevos</span></span>
-      <span class="word"><span class="word-inner">fértiles:</span></span>
-      <span class="word"><span class="word-inner">llevas</span></span>
-      <span class="word"><span class="word-inner">a</span></span>
-      <span class="word"><span class="word-inner">casa</span></span>
-      <span class="word" style="display:block;height:0.2em;"></span>
-      <span class="word"><span class="word-inner">un</span></span>
-      <span class="word"><span class="word-inner">proceso</span></span>
-      <span class="word"><span class="word-inner">que</span></span>
-      <span class="word"><span class="word-inner">la</span></span>
-      <span class="word"><span class="word-inner">familia</span></span>
-      <span class="word" style="display:block;height:0.2em;"></span>
-      <span class="word"><span class="word-inner">verá,</span></span>
-      <span class="word"><span class="word-inner">esperará</span></span>
-      <span class="word"><span class="word-inner">y</span></span>
-      <span class="word" style="display:block;height:0.2em;"></span>
-      <span class="word"><span class="word-inner"><em>recordará.</em></span></span>
+    <blockquote class="manifesto__quote" style="font-family: var(--font-serif); font-size: clamp(1.8rem, 4vw, 3.2rem); font-weight: 300; line-height: 1.45; color: var(--crema); max-width: 860px; margin: 0 auto; letter-spacing: -0.01em;">
+      <span class="word-reveal" style="display:block; margin-bottom: 0.15em;">
+        <span class="word"><span class="word-inner">No</span></span>
+        <span class="word"><span class="word-inner">compras</span></span>
+        <span class="word"><span class="word-inner">solo</span></span>
+        <span class="word"><span class="word-inner">huevos</span></span>
+        <span class="word"><span class="word-inner">fértiles:</span></span>
+      </span>
+      <span class="word-reveal" style="display:block; margin-bottom: 0.15em;">
+        <span class="word"><span class="word-inner">llevas</span></span>
+        <span class="word"><span class="word-inner">a</span></span>
+        <span class="word"><span class="word-inner">casa</span></span>
+        <span class="word"><span class="word-inner">un</span></span>
+        <span class="word"><span class="word-inner">proceso</span></span>
+        <span class="word"><span class="word-inner">que</span></span>
+        <span class="word"><span class="word-inner">la</span></span>
+        <span class="word"><span class="word-inner">familia</span></span>
+      </span>
+      <span class="word-reveal" style="display:block;">
+        <span class="word"><span class="word-inner">verá,</span></span>
+        <span class="word"><span class="word-inner">esperará</span></span>
+        <span class="word"><span class="word-inner">y</span></span>
+        <span class="word"><span class="word-inner" style="color: var(--dorado-pale); font-weight: 500; font-style: italic;">recordará.</span></span>
+      </span>
     </blockquote>
     <p class="manifesto__sub reveal">— La Granja de Albita · Est. Santa Elena, Antioquia</p>
   </section>
@@ -1497,36 +1539,62 @@
 
     <div class="container">
       <div class="breeds__cards">
+
         <div class="breed-card reveal">
-          <span class="breed-card__emoji">🐔</span>
-          <div class="breed-card__name">Silkie</div>
-          <div class="breed-card__origin">China · Siglo XIII</div>
-          <div class="breed-card__trait">Plumas de seda, piel negra, temperamento dócil. La gallina más cariñosa del mundo.</div>
+          <div class="breed-card__photo-placeholder" style="background: linear-gradient(135deg, #e8dfc8 0%, #d4c9a8 100%);">
+            <img src="https://images.unsplash.com/photo-1548550023-2bdb3c5beed7?w=400&h=320&fit=crop&crop=center" alt="Silkie" class="breed-card__photo" loading="lazy" onerror="this.style.display='none'">
+          </div>
+          <div class="breed-card__body">
+            <div class="breed-card__name">Silkie</div>
+            <div class="breed-card__origin">China · Siglo XIII</div>
+            <div class="breed-card__trait">Plumas de seda, piel negra, temperamento dócil. La gallina más cariñosa del mundo.</div>
+          </div>
         </div>
+
         <div class="breed-card reveal">
-          <span class="breed-card__emoji">🐓</span>
-          <div class="breed-card__name">Brahma Imperial</div>
-          <div class="breed-card__origin">Asia · Raza gigante</div>
-          <div class="breed-card__trait">Una de las razas más grandes. Imponente, con plumas en las patas y carácter tranquilo.</div>
+          <div class="breed-card__photo-placeholder" style="background: linear-gradient(135deg, #c9b89a 0%, #a89070 100%);">
+            <img src="https://images.unsplash.com/photo-1612170153139-6f881ff067e0?w=400&h=320&fit=crop&crop=center" alt="Brahma Imperial" class="breed-card__photo" loading="lazy" onerror="this.style.display='none'">
+          </div>
+          <div class="breed-card__body">
+            <div class="breed-card__name">Brahma Imperial</div>
+            <div class="breed-card__origin">Asia · Raza gigante</div>
+            <div class="breed-card__trait">Una de las razas más grandes. Imponente, con plumas en las patas y carácter tranquilo.</div>
+          </div>
         </div>
+
         <div class="breed-card reveal">
-          <span class="breed-card__emoji">🐣</span>
-          <div class="breed-card__name">Polish Penacho</div>
-          <div class="breed-card__origin">Europa · Renacimiento</div>
-          <div class="breed-card__trait">El penacho de plumas en la cabeza la hace inconfundible. Elegante y sorprendente.</div>
+          <div class="breed-card__photo-placeholder" style="background: linear-gradient(135deg, #f0e8d0 0%, #ddd0b0 100%);">
+            <img src="https://images.unsplash.com/photo-1606567595334-d39972c85dbe?w=400&h=320&fit=crop&crop=center" alt="Polish Penacho" class="breed-card__photo" loading="lazy" onerror="this.style.display='none'">
+          </div>
+          <div class="breed-card__body">
+            <div class="breed-card__name">Polish Penacho</div>
+            <div class="breed-card__origin">Europa · Renacimiento</div>
+            <div class="breed-card__trait">El penacho de plumas en la cabeza la hace inconfundible. Elegante y sorprendente.</div>
+          </div>
         </div>
+
         <div class="breed-card reveal">
-          <span class="breed-card__emoji">🦜</span>
-          <div class="breed-card__name">Cochin Bantam</div>
-          <div class="breed-card__origin">China · Miniatura</div>
-          <div class="breed-card__trait">Pequeña, esponjosa, con plumas en las patas. Perfecta para espacios pequeños.</div>
+          <div class="breed-card__photo-placeholder" style="background: linear-gradient(135deg, #8faa60 0%, #5c6b2e 100%);">
+            <img src="https://images.unsplash.com/photo-1593030761757-71fae45fa0e7?w=400&h=320&fit=crop&crop=center" alt="Cochin Bantam" class="breed-card__photo" loading="lazy" onerror="this.style.display='none'">
+          </div>
+          <div class="breed-card__body">
+            <div class="breed-card__name">Cochin Bantam</div>
+            <div class="breed-card__origin">China · Miniatura</div>
+            <div class="breed-card__trait">Pequeña, esponjosa, con plumas en las patas. Perfecta para espacios pequeños.</div>
+          </div>
         </div>
+
         <div class="breed-card reveal">
-          <span class="breed-card__emoji">✨</span>
-          <div class="breed-card__name">Sebright Dorada</div>
-          <div class="breed-card__origin">Inglaterra · 1810</div>
-          <div class="breed-card__trait">Plumas con ribete negro sobre fondo dorado. Obra de arte viva. Raza de ornamento puro.</div>
+          <div class="breed-card__photo-placeholder" style="background: linear-gradient(135deg, #d4a017 0%, #3d2b1f 100%);">
+            <img src="https://images.unsplash.com/photo-1569356144481-bcefd65e20b1?w=400&h=320&fit=crop&crop=center" alt="Sebright Dorada" class="breed-card__photo" loading="lazy" onerror="this.style.display='none'">
+          </div>
+          <div class="breed-card__body">
+            <div class="breed-card__name">Sebright Dorada</div>
+            <div class="breed-card__origin">Inglaterra · 1810</div>
+            <div class="breed-card__trait">Plumas con ribete negro sobre fondo dorado. Obra de arte viva. Raza de ornamento puro.</div>
+          </div>
         </div>
+
       </div>
     </div>
   </section>
